@@ -1,0 +1,80 @@
+Payroll 3C – Developer Guide (Step 1–2)
+======================================
+
+Mục tiêu
+- Cung cấp tài liệu nhanh để dev tiếp tục triển khai mà không cần đọc code.
+- Tóm tắt hiện trạng: roles/groups, models, sequences, access rights, dependencies.
+- Định hướng bước tiếp theo (Step 3+) và checklist tích hợp các module nội bộ.
+
+Dependencies
+- Odoo 17 CE
+- Depends trong manifest: base, hr
+- Tích hợp dự kiến: attendance_3c, overtime_3c, timeoff_3c, timesheet_3c (để tự động nạp công, OT, nghỉ)
+
+Roles & Groups (security/security.xml)
+- group_payroll_employee: Nhân viên (sau này chỉ xem payslip của chính mình)
+- group_payroll_officer: HR/Accountant thao tác bảng lương
+- group_payroll_manager: Quản trị lương (implied Officer)
+- group_payroll_approver: Người duyệt lương (tách biệt để SoD)
+- Lưu ý: Admin hệ thống dùng sẵn base.group_system
+
+Access Rights (security/ir.model.access.csv)
+- payroll.rule/category/structure: Officer có quyền đọc/ghi/tạo, không xóa
+- payroll.payslip: Employee chỉ đọc (record rule sẽ giới hạn theo user); Officer có toàn quyền
+- payroll.payslip.line: Officer có toàn quyền
+- payroll.payslip.run: Officer có toàn quyền
+- payroll.vn.params: Manager có toàn quyền
+
+Sequences (data/sequence.xml)
+- seq_payslip: code=payroll.payslip, prefix=PS/%(year)s/%(month)s/
+- seq_payslip_run: code=payroll.payslip.run, prefix=PR/%(year)s/%(month)s/
+
+Core Models (models/*.py)
+- payroll.category: name, code, type(earn/ded/contrib), parent_id
+- payroll.rule: name, code, sequence, category_id, active; công thức tối thiểu (condition, amount fixed/percent/python)
+- payroll.structure: name, code, rule_ids M2M
+- payroll.payslip: employee_id(M2O hr.employee), date_from/date_to, structure_id, run_id, state(draft→to_approve→approved→done/cancel), line_ids
+- payroll.payslip.line: payslip_id, name, code, sequence, amount, quantity, total
+- payroll.payslip.run: name, date_start/end, slip_ids
+- payroll.vn.params: các tham số VN (giảm trừ, bảo hiểm, công đoàn)
+
+Hiển thị trên Apps
+- __manifest__.py: application=True, images=[static/description/icon.svg]
+
+Ghi chú tích hợp custom addons
+- Liên kết nhân viên: sử dụng hr.employee (module hr là bắt buộc).
+- Dữ liệu công/OT/leave: sẽ lấy từ attendance_3c, overtime_3c, timeoff_3c, timesheet_3c ở Step 5 (Get Work Data).
+- Employee self-service: cần record rule để lọc payslip theo employee.user_id == uid (Step 3/4).
+
+Bước tiếp theo (đề xuất thực thi theo thứ tự)
+1) Step 3 – Views, Actions, Menus
+   - Tạo views + actions cho: category, rule, structure, payslip, batch, vn.params
+   - Menu: Payroll (root) → Self-service/Operations/Approvals/Configuration
+2) Step 4 – Rule Engine nâng cao
+   - Tính theo sequence; safe-eval python; support percent từ base code; tổng category
+   - Bộ rule mẫu: BASIC, ALLOWANCE, INS_EMP, INS_CMP, PIT, NET
+3) Step 5 – Nạp dữ liệu công
+   - Nút "Get Work Data" trên payslip để lấy worked days (attendance/timeoff) và inputs (overtime)
+4) Step 6 – Tham số VN và PIT/BHXH
+   - Bậc thuế lũy tiến, trần BHXH/BHYT/BHTN, tách phần nhân viên/đơn vị
+5) Step 7 – Batch & Wizard
+   - Wizard Generate Payslips theo kỳ, domain nhân sự
+6) Step 8 – Report
+   - QWeb phiếu lương cá nhân + bảng lương tổng hợp theo phòng ban
+7) Step 9 – Kế toán (tuỳ chọn)
+   - Map tài khoản theo category/rule, tạo bút toán cho batch
+
+Checklist khi phát triển thêm
+- [ ] Cập nhật __manifest__.py: thêm file XML mới (views/menu/security/data)
+- [ ] Cập nhật access rights nếu tạo model mới
+- [ ] Thêm record rule phù hợp nhóm (đặc biệt Employee)
+- [ ] Tạo tests cơ bản cho công thức chính
+- [ ] Xuất/nhập dịch i18n nếu có UI mới
+
+How to upgrade
+- UI: Apps → Update Apps List → Payroll 3C → Upgrade
+- CLI (PowerShell, thay YOUR_DB_NAME):
+  & "c:\Program Files\Odoo 17.0.20250219\python\python.exe" `
+    "c:\Program Files\Odoo 17.0.20250219\server\odoo-bin" `
+    -c "c:\Program Files\Odoo 17.0.20250219\server\odoo.conf" `
+    -d YOUR_DB_NAME -u payroll_3c

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <!-- Server action to compute payslips for selected batch -->
+  <record id="server_action_compute_payslips_run" model="ir.actions.server">
+    <field name="name">Compute Payslips</field>
+    <field name="model_id" ref="model_payroll_payslip_run"/>
+    <field name="state">code</field>
+  <field name="code"><![CDATA[
+# env: Odoo environment
+# records: payroll.payslip.run recordset
+runs = records
+slips = env['payroll.payslip'].search([('run_id', 'in', runs.ids)])
+
+# Try to auto-assign default structure to slips missing it
+default_struct = None
+try:
+  default_struct = env.ref('payroll_3c.structure_vn_standard')
+except Exception:
+  default_struct = None
+if not default_struct:
+  default_struct = env['payroll.structure'].search([('code', '=', 'VN_STD')], limit=1)
+if not default_struct:
+  structs = env['payroll.structure'].search([], limit=2)
+  if len(structs) == 1:
+    default_struct = structs
+
+if slips:
+  no_struct = slips.filtered(lambda s: not s.structure_id)
+  if default_struct and no_struct:
+    no_struct.write({'structure_id': default_struct.id})
+  slips.action_compute_lines()
+
+# return to the first run form if available
+action = env.ref('payroll_3c.action_payroll_runs').read()[0]
+if runs:
+  action['res_id'] = runs[0].id
+  action['view_mode'] = 'form'
+  action['views'] = False
+result = action
+  ]]></field>
+    <field name="binding_model_id" ref="model_payroll_payslip_run"/>
+    <field name="binding_type">action</field>
+  </record>
+</odoo>

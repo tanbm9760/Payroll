@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <record id="view_payroll_template_tree" model="ir.ui.view">
+    <field name="name">payroll.template.tree</field>
+    <field name="model">payroll.template</field>
+    <field name="arch" type="xml">
+      <tree>
+        <field name="name"/>
+        <field name="note"/>
+      </tree>
+    </field>
+  </record>
+
+  <record id="view_payroll_template_form" model="ir.ui.view">
+    <field name="name">payroll.template.form</field>
+    <field name="model">payroll.template</field>
+    <field name="arch" type="xml">
+      <form>
+        <header>
+          <button name="action_autofill_from_catalog" type="object" string="Auto add from Catalog" class="btn-primary"/>
+          <button name="action_open_variables" type="object" string="Open Variable Catalog" class="btn-secondary"/>
+        </header>
+        <sheet>
+          <group>
+            <field name="name"/>
+            <field name="note"/>
+          </group>
+          <notebook>
+            <page string="Cấu hình cột">
+              <field name="column_ids" context="{'default_template_id': active_id}">
+                <tree editable="bottom" create="1" delete="1">
+                  <field name="sequence" widget="handle"/>
+                  <field name="display_name"/>
+                  <field name="var_type"/>
+                  <field name="data_type"/>
+                  <field name="system_key"/>
+                  <field name="payroll_key"/>
+                  <field name="definition"/>
+                  <field name="description"/>
+                  <field name="visible"/>
+                </tree>
+              </field>
+            </page>
+            <page string="Biến hệ thống">
+              <group>
+                <field name="variable_helper_ids" domain="[('active','=',True)]">
+                  <tree editable="false" create="0" delete="0" string="Biến" default_order="category, name">
+                    <button name="action_add_to_template" type="object" string="+" class="oe_highlight" context="{'active_model': 'payroll.template', 'active_id': parent.id}"/>
+                    <field name="category"/>
+                    <field name="name"/>
+                    <field name="payroll_key"/>
+                    <field name="data_type"/>
+                    <field name="system_key"/>
+                  </tree>
+                </field>
+                <field name="variable_select_ids" widget="many2many_tags" domain="[('active','=',True)]" placeholder="Chọn nhanh biến..."/>
+                <button name="action_add_selected_variables" type="object" string="Thêm biến đã chọn" class="btn-secondary"/>
+              </group>
+            </page>
+          </notebook>
+        </sheet>
+      </form>
+    </field>
+  </record>
+  <record id="action_payroll_templates" model="ir.actions.act_window">
+    <field name="name">Payroll Templates</field>
+    <field name="res_model">payroll.template</field>
+    <field name="view_mode">tree,form</field>
+  </record>
+</odoo>

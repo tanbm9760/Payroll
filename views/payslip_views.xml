@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <!-- Payslips -->
+  <record id="view_payroll_payslip_tree" model="ir.ui.view">
+    <field name="name">payroll.payslip.tree</field>
+    <field name="model">payroll.payslip</field>
+    <field name="arch" type="xml">
+      <tree create="0" edit="0" delete="0">
+        <field name="name"/>
+        <field name="employee_id"/>
+        <field name="employee_department_id"/>
+        <field name="employee_calendar2_id"/>
+        <field name="date_from"/>
+        <field name="date_to"/>
+        <field name="state"/>
+      </tree>
+    </field>
+  </record>
+  <record id="view_payroll_payslip_form" model="ir.ui.view">
+    <field name="name">payroll.payslip.form</field>
+    <field name="model">payroll.payslip</field>
+    <field name="arch" type="xml">
+      <form>
+        <header>
+          <button name="action_reset_to_draft" type="object" string="Set to Draft" class="btn-secondary"
+                  groups="payroll_3c.group_payroll_officer,payroll_3c.group_payroll_manager"/>
+          <button name="action_set_to_approve" type="object" string="Submit"
+                  groups="payroll_3c.group_payroll_officer,payroll_3c.group_payroll_manager"/>
+          <button name="action_approve" type="object" string="Approve"
+                  groups="payroll_3c.group_payroll_approver,payroll_3c.group_payroll_manager"/>
+          <button name="action_done" type="object" string="Mark as Done"
+                  groups="payroll_3c.group_payroll_officer,payroll_3c.group_payroll_manager"/>
+          <button name="action_cancel" type="object" string="Cancel" class="btn-secondary"
+                  groups="payroll_3c.group_payroll_officer,payroll_3c.group_payroll_manager"/>
+          <field name="state" widget="statusbar"/>
+    <button name="%(payroll_3c.action_confirm_delete_payslip)d" type="action" string="Delete" class="btn-danger" context="{'default_model':'payroll.payslip'}"/>
+        </header>
+        <sheet>
+          <group>
+            <group>
+              <field name="name" readonly="1"/>
+              <field name="employee_id" readonly="1"/>
+            </group>
+            <field name="date_from" readonly="1"/>
+            <field name="date_to" readonly="1"/>
+            <field name="run_id" readonly="1"/>
+          </group>
+          <notebook>
+            <page string="Lines">
+              <field name="line_ids">
+                <tree create="0" edit="0" delete="0">
+                  <field name="name" readonly="1"/>
+                  <field name="total" readonly="1"/>
+                </tree>
+              </field>
+            </page>
+          </notebook>
+        </sheet>
+      </form>
+    </field>
+  </record>
+  <record id="action_payroll_payslips" model="ir.actions.act_window">
+    <field name="name">Payslips</field>
+    <field name="res_model">payroll.payslip</field>
+    <field name="view_mode">tree,form</field>
+  </record>
+
+  <!-- Batches -->
+  <record id="view_payroll_run_tree" model="ir.ui.view">
+    <field name="name">payroll.payslip.run.tree</field>
+    <field name="model">payroll.payslip.run</field>
+    <field name="arch" type="xml">
+      <tree>
+        <field name="name"/>
+        <field name="date_start"/>
+        <field name="date_end"/>
+      </tree>
+    </field>
+  </record>
+  <record id="view_payroll_run_form" model="ir.ui.view">
+    <field name="name">payroll.payslip.run.form</field>
+    <field name="model">payroll.payslip.run</field>
+    <field name="arch" type="xml">
+      <form>
+  <header>
+    <button name="action_open_generate_payslips_wizard" type="object" string="Tạo phiếu lương"
+      class="btn-primary" groups="payroll_3c.group_payroll_officer,payroll_3c.group_payroll_manager"/>
+          <button name="action_open_create_sheet_wizard" type="object" string="Tạo bảng lương"
+                  class="btn-secondary" groups="payroll_3c.group_payroll_officer,payroll_3c.group_payroll_manager"/>
+    <button name="%(payroll_3c.server_action_compute_payslips_run)d" type="action" string="Tính toán"
+      class="btn-secondary" groups="payroll_3c.group_payroll_officer,payroll_3c.group_payroll_manager"/>
+    <button name="action_open_confirm_delete_batch" type="object" string="Xóa" class="btn-danger"/>
+  </header>
+        <sheet>
+          <group>
+            <field name="name"/>
+            <field name="month"/>
+            <field name="year"/>
+            <field name="select_days"/>
+            <field name="date_start"/>
+            <field name="date_end"/>
+          </group>
+          <notebook>
+            <page string="Payslips">
+              <field name="slip_ids">
+                <tree create="0" edit="0" delete="0">
+                  <field name="name"/>
+                  <field name="employee_id"/>
+                  <field name="employee_department_id"/>
+                  <field name="employee_calendar2_id"/>
+                  <field name="state"/>
+                </tree>
+              </field>
+            </page>
+            <page string="Payroll Sheet">
+              <group>
+                <field name="sheet_id" context="{'default_run_id': active_id}" domain="[('run_id','=',id)]"/>
+              </group>
+            </page>
+          </notebook>
+        </sheet>
+      </form>
+    </field>
+  </record>
+  <record id="action_payroll_runs" model="ir.actions.act_window">
+    <field name="name">Payroll Batches</field>
+    <field name="res_model">payroll.payslip.run</field>
+    <field name="view_mode">tree,form</field>
+  </record>
+</odoo>

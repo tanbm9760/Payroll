@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <!-- Confirm Delete Wizard View (placed before views to avoid forward-ref issues) -->
+  <record id="view_confirm_delete_wizard_form" model="ir.ui.view">
+    <field name="name">payroll.confirm.delete.wizard.form</field>
+    <field name="model">payroll.confirm.delete.wizard</field>
+    <field name="arch" type="xml">
+      <form string="Confirm Delete">
+        <group>
+          <field name="message" readonly="1" nolabel="1"/>
+        </group>
+        <footer>
+          <button string="Delete" type="object" name="action_confirm" class="btn-danger"/>
+          <button string="Cancel" class="btn-secondary" special="cancel"/>
+        </footer>
+      </form>
+    </field>
+  </record>
+
+  <!-- Actions to open wizard for deletion (before views) -->
+  <record id="action_confirm_delete_payslip" model="ir.actions.act_window">
+    <field name="name">Confirm Delete Payslip</field>
+    <field name="res_model">payroll.confirm.delete.wizard</field>
+    <field name="view_mode">form</field>
+    <field name="target">new</field>
+    <field name="context">{
+      'default_model': 'payroll.payslip',
+      'message': 'Bạn có chắc chắn muốn xóa phiếu lương đã chọn? Phiếu ở trạng thái Done sẽ bị chặn.'
+    }</field>
+  </record>
+
+  <record id="action_confirm_delete_batch" model="ir.actions.act_window">
+    <field name="name">Confirm Delete Batch</field>
+    <field name="res_model">payroll.confirm.delete.wizard</field>
+    <field name="view_mode">form</field>
+    <field name="target">new</field>
+    <field name="context">{
+      'default_model': 'payroll.payslip.run',
+      'message': 'Bạn có chắc chắn muốn xóa batch đã chọn? Nếu có payslip Done, thao tác sẽ bị chặn.'
+    }</field>
+  </record>
+
+  <record id="action_confirm_delete_sheet" model="ir.actions.act_window">
+    <field name="name">Confirm Delete Sheet</field>
+    <field name="res_model">payroll.confirm.delete.wizard</field>
+    <field name="view_mode">form</field>
+    <field name="target">new</field>
+    <field name="context">{
+      'default_model': 'payroll.sheet',
+      'message': 'Bạn có chắc chắn muốn xóa payroll sheet đã chọn? Sheet ở trạng thái Done sẽ bị chặn.'
+    }</field>
+  </record>
+
+  <!-- Payroll Sheet Views -->
+  <record id="view_payroll_sheet_tree" model="ir.ui.view">
+    <field name="name">payroll.sheet.tree</field>
+    <field name="model">payroll.sheet</field>
+    <field name="arch" type="xml">
+      <tree>
+        <field name="name"/>
+        <field name="year"/>
+        <field name="month"/>
+        <field name="date_start"/>
+        <field name="date_end"/>
+        <field name="state"/>
+      </tree>
+    </field>
+  </record>
+
+  <record id="view_payroll_sheet_form" model="ir.ui.view">
+    <field name="name">payroll.sheet.form</field>
+    <field name="model">payroll.sheet</field>
+    <field name="arch" type="xml">
+      <form>
+        <header>
+          <button name="action_generate_lines" type="object" string="Cập nhật danh sách" class="btn-primary"/>
+          <field name="state" widget="statusbar"/>
+          <button name="action_sync_timesheet_points" type="object" string="Cập nhật điểm chấm công" class="btn-secondary"
+                  groups="payroll_3c.group_payroll_manager,payroll_3c.group_payroll_officer"/>
+          <button name="action_open_timesheet_cycle" type="object" string="Chu kỳ chấm công" class="btn-secondary"/>
+        </header>
+        <sheet>
+          <field name="line_ids" options="{'no_open': True}" context="{'default_sheet_id': active_id}">
+            <tree string="Lines" editable="bottom" create="0" delete="1">
+              <field name="employee_id" readonly="1"/>
+              <field name="emp_code" readonly="1"/>
+              <field name="department_name" readonly="1"/>
+              <field name="employee_calendar2_id"/ readonly="1"/>
+              <field name="work_day" string="Công chuẩn" sum="Tổng công chuẩn"/>
+              <field name="points" string="Công thực tế" sum="Tổng công thực tế"/>
+              <field name="unpaid_lf_point"/>
+              <field name="sum_late"/>
+            </tree>
+          </field>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="action_payroll_sheets" model="ir.actions.act_window">
+    <field name="name">Payroll Sheets</field>
+    <field name="res_model">payroll.sheet</field>
+    <field name="view_mode">tree,form</field>
+  </record>
+
+  <!-- Wizard view -->
+  <record id="view_create_sheet_wizard_form" model="ir.ui.view">
+    <field name="name">payroll.create.sheet.wizard.form</field>
+    <field name="model">payroll.create.sheet.wizard</field>
+    <field name="arch" type="xml">
+      <form string="Create Payroll Sheet">
+        <group>
+          <field name="run_id" invisible="1"/>
+          <field name="template_id"/>
+          <field name="sheet_name"/>
+        </group>
+        <footer>
+          <button string="Create" type="object" name="action_create" class="btn-primary"/>
+          <button string="Cancel" class="btn-secondary" special="cancel"/>
+        </footer>
+      </form>
+    </field>
+  </record>
+
+  <record id="action_create_sheet_wizard" model="ir.actions.act_window">
+    <field name="name">Create Payroll Sheet</field>
+    <field name="res_model">payroll.create.sheet.wizard</field>
+    <field name="view_mode">form</field>
+    <field name="target">new</field>
+  </record>
+
+  
+</odoo>

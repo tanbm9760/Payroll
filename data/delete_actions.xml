@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <!-- Delete selected Variables -->
+  <record id="ir_action_delete_variables" model="ir.actions.server">
+    <field name="name">Delete Selected Variables</field>
+    <field name="model_id" ref="model_payroll_variable"/>
+    <field name="state">code</field>
+    <field name="code"><![CDATA[
+records.unlink()
+    ]]></field>
+    <field name="binding_model_id" ref="model_payroll_variable"/>
+    <field name="binding_type">action</field>
+    <field name="binding_view_types">list</field>
+    <field name="groups_id" eval="[(4, ref('payroll_3c.group_payroll_manager'))]"/>
+  </record>
+
+  <!-- Delete selected Payroll Templates -->
+  <record id="ir_action_delete_templates" model="ir.actions.server">
+    <field name="name">Delete Selected Templates</field>
+    <field name="model_id" ref="model_payroll_template"/>
+    <field name="state">code</field>
+    <field name="code"><![CDATA[
+records.unlink()
+    ]]></field>
+    <field name="binding_model_id" ref="model_payroll_template"/>
+    <field name="binding_type">action</field>
+    <field name="binding_view_types">list</field>
+    <field name="groups_id" eval="[(4, ref('payroll_3c.group_payroll_manager'))]"/>
+  </record>
+</odoo>

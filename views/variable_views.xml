@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <record id="view_payroll_variable_tree" model="ir.ui.view">
+    <field name="name">payroll.variable.tree</field>
+    <field name="model">payroll.variable</field>
+    <field name="arch" type="xml">
+      <tree>
+        <field name="name"/>
+        <field name="category"/>
+        <field name="source_module"/>
+        <field name="system_key"/>
+        <field name="payroll_key"/>
+        <field name="kind"/>
+        <field name="data_type"/>
+        <field name="definition"/>
+        <field name="description"/>
+        <field name="active"/>
+      </tree>
+    </field>
+  </record>
+
+  <record id="view_payroll_variable_form" model="ir.ui.view">
+    <field name="name">payroll.variable.form</field>
+    <field name="model">payroll.variable</field>
+    <field name="arch" type="xml">
+      <form>
+        <sheet>
+          <group>
+            <field name="name"/>
+            <field name="category"/>
+            <field name="source_module"/>
+          </group>
+          <group>
+            <field name="system_key"/>
+            <field name="payroll_key"/>
+          </group>
+          <group>
+            <field name="kind"/>
+            <field name="data_type"/>
+          </group>
+          <group>
+            <field name="definition" placeholder="Nhập công thức hoặc mô tả. Ví dụ: work_day - unpaid_lf_point"/>
+            <field name="description"/>
+          </group>
+          <group>
+            <field name="active"/>
+          </group>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="action_payroll_variables" model="ir.actions.act_window">
+    <field name="name">Variable Catalog</field>
+    <field name="res_model">payroll.variable</field>
+    <field name="view_mode">tree,form</field>
+    <field name="context">{}</field>
+  </record>
+</odoo>

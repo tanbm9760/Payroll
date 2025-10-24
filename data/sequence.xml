@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <record id="seq_payslip" model="ir.sequence">
+    <field name="name">Payslip</field>
+    <field name="code">payroll.payslip</field>
+    <field name="prefix">PS/%(year)s/%(month)s/</field>
+    <field name="padding">4</field>
+  </record>
+  <record id="seq_payslip_run" model="ir.sequence">
+    <field name="name">Payroll Batch</field>
+    <field name="code">payroll.payslip.run</field>
+    <field name="prefix">PR/%(year)s/%(month)s/</field>
+    <field name="padding">4</field>
+  </record>
+</odoo>

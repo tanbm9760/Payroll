@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <record id="view_salary_profile_tree" model="ir.ui.view">
+    <field name="name">payroll.salary.profile.tree</field>
+    <field name="model">payroll.salary.profile</field>
+    <field name="arch" type="xml">
+      <tree>
+        <field name="employee_id"/>
+        <field name="employee_code"/>
+        <field name="department_id"/>
+        <field name="base_wage"/>
+        <field name="si_wage"/>
+        <field name="dependent_count"/>
+        <field name="note"/>
+      </tree>
+    </field>
+  </record>
+  <record id="view_salary_profile_form" model="ir.ui.view">
+    <field name="name">payroll.salary.profile.form</field>
+    <field name="model">payroll.salary.profile</field>
+    <field name="arch" type="xml">
+      <form string="Salary Profile">
+        <sheet>
+          <group>
+            <group>
+              <field name="employee_id"/>
+              <field name="employee_code"/>
+              <field name="department_id" readonly="1"/>
+            </group>
+            <group>
+              <field name="employee_avatar_html" widget="html" nolabel="1"/>
+            </group>
+          </group>
+          <group>
+            <field name="base_wage"/>
+            <field name="si_wage"/>
+            <field name="dependent_count"/>
+          </group>
+          <group>
+            <field name="note"/>
+          </group>
+        </sheet>
+      </form>
+    </field>
+  </record>
+  <record id="view_salary_profile_search" model="ir.ui.view">
+    <field name="name">payroll.salary.profile.search</field>
+    <field name="model">payroll.salary.profile</field>
+    <field name="arch" type="xml">
+      <search>
+        <field name="employee_id"/>
+        <field name="employee_code"/>
+        <filter string="By Department" name="by_department" context="{'group_by':'department_id'}"/>
+        <field name="department_id"/>
+      </search>
+    </field>
+  </record>
+  <record id="action_salary_profiles" model="ir.actions.act_window">
+    <field name="name">Salary Profiles</field>
+    <field name="res_model">payroll.salary.profile</field>
+    <field name="view_mode">tree,form</field>
+    <field name="search_view_id" ref="payroll_3c.view_salary_profile_search"/>
+  </record>
+
+  <!-- Bulk Create Profiles wizard view and action -->
+  <record id="view_bulk_create_profiles_wizard" model="ir.ui.view">
+    <field name="name">payroll.bulk.create.profiles.wizard.form</field>
+    <field name="model">payroll.bulk.create.profiles.wizard</field>
+    <field name="arch" type="xml">
+      <form string="Bulk Create Profiles">
+        <sheet>
+          <group>
+            <field name="department_id"/>
+            <field name="include_has_profile"/>
+            <field name="employee_ids" widget="many2many_tags"/>
+          </group>
+        </sheet>
+        <footer>
+          <button string="Create Profiles" type="object" name="action_create_profiles" class="btn-primary"/>
+          <button string="Cancel" special="cancel" class="btn-secondary"/>
+        </footer>
+      </form>
+    </field>
+  </record>
+
+  <record id="action_bulk_create_profiles_wizard" model="ir.actions.act_window">
+    <field name="name">Bulk Create Profiles</field>
+    <field name="res_model">payroll.bulk.create.profiles.wizard</field>
+    <field name="view_mode">form</field>
+    <field name="target">new</field>
+    <field name="context">{}</field>
+  </record>
+
+  <!-- Add Action button in tree view to open wizard -->
+  <record id="salary_profile_action_server_open_bulk" model="ir.actions.server">
+    <field name="name">Bulk Create Profiles</field>
+    <field name="model_id" ref="model_payroll_salary_profile"/>
+    <field name="binding_model_id" ref="model_payroll_salary_profile"/>
+    <field name="binding_view_types">list,form</field>
+    <field name="state">code</field>
+    <field name="code">action = env.ref('payroll_3c.action_bulk_create_profiles_wizard').read()[0]</field>
+    <field name="groups_id" eval="[(4, ref('payroll_3c.group_payroll_officer')), (4, ref('payroll_3c.group_payroll_manager'))]"/>
+  </record>
+</odoo>

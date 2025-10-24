@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo noupdate="1">
+  <!-- Categories -->
+  <record id="cat_EARN" model="payroll.category">
+    <field name="name">Earning</field>
+    <field name="code">EARN</field>
+    <field name="type">earn</field>
+  </record>
+  <record id="cat_DED" model="payroll.category">
+    <field name="name">Deduction</field>
+    <field name="code">DED</field>
+    <field name="type">ded</field>
+  </record>
+  <record id="cat_CONTRIB" model="payroll.category">
+    <field name="name">Contribution</field>
+    <field name="code">CONTRIB</field>
+    <field name="type">contrib</field>
+  </record>
+
+  <!-- Rules: BASIC, ALLOW, INS_EMP, INS_CMP, PIT, NET -->
+  <record id="rule_BASIC" model="payroll.rule">
+    <field name="name">Basic Salary</field>
+    <field name="code">BASIC</field>
+    <field name="sequence">10</field>
+    <field name="category_id" ref="payroll_3c.cat_EARN"/>
+    <field name="condition">always</field>
+    <field name="amount_type">python</field>
+  <field name="amount_python">result = wages.get('base', 0.0)</field>
+  </record>
+
+  <record id="rule_ALLOW" model="payroll.rule">
+    <field name="name">Allowance</field>
+    <field name="code">ALLOW</field>
+    <field name="sequence">20</field>
+    <field name="category_id" ref="payroll_3c.cat_EARN"/>
+    <field name="condition">always</field>
+    <field name="amount_type">python</field>
+    <field name="amount_python">result = (employee.allow_lunch or 0.0)</field>
+  </record>
+
+  <record id="rule_INS_EMP" model="payroll.rule">
+    <field name="name">Insurance (Employee)</field>
+    <field name="code">INS_EMP</field>
+    <field name="sequence">30</field>
+    <field name="category_id" ref="payroll_3c.cat_DED"/>
+    <field name="condition">always</field>
+    <field name="amount_type">python</field>
+  <field name="amount_python"># Employee insurance contributions based on VN Params
+base = wages.get('si', 0.0) or rules.get('BASIC', 0.0)
+rate = (params.get('bhxh_rate_emp', 8.0) + params.get('bhyt_rate_emp', 1.5) + params.get('bhtn_rate_emp', 1.0)) / 100.0
+result = base * rate</field>
+  </record>
+
+  <record id="rule_INS_CMP" model="payroll.rule">
+    <field name="name">Insurance (Company)</field>
+    <field name="code">INS_CMP</field>
+    <field name="sequence">40</field>
+    <field name="category_id" ref="payroll_3c.cat_CONTRIB"/>
+    <field name="condition">always</field>
+    <field name="amount_type">python</field>
+  <field name="amount_python"># Company insurance contributions (not deducted from NET)
+base = wages.get('si', 0.0) or rules.get('BASIC', 0.0)
+rate = (params.get('bhxh_rate_cmp', 17.5) + params.get('bhyt_rate_cmp', 3.0) + params.get('bhtn_rate_cmp', 1.0)) / 100.0
+result = base * rate</field>
+  </record>
+
+  <record id="rule_PIT" model="payroll.rule">
+    <field name="name">Personal Income Tax</field>
+    <field name="code">PIT</field>
+    <field name="sequence">60</field>
+    <field name="category_id" ref="payroll_3c.cat_DED"/>
+    <field name="condition">always</field>
+    <field name="amount_type">python</field>
+  <field name="amount_python"># Simplified PIT using params + dependents
+earn = rules.get('BASIC', 0.0) + rules.get('ALLOW', 0.0)
+deduct = params.get('personal_deduction', 11000000.0) + params.get('dependent_deduction', 4400000.0) * (dependents or 0)
+taxable = max(0.0, earn - rules.get('INS_EMP', 0.0) - deduct)
+# Flat 10% placeholder
+result = taxable * 0.10</field>
+  </record>
+
+  <record id="rule_NET" model="payroll.rule">
+    <field name="name">Net Salary</field>
+    <field name="code">NET</field>
+    <field name="sequence">80</field>
+    <field name="category_id" ref="payroll_3c.cat_EARN"/>
+    <field name="condition">always</field>
+    <field name="amount_type">python</field>
+    <field name="amount_python">result = rules.get('BASIC', 0.0) + rules.get('ALLOW', 0.0) - rules.get('INS_EMP', 0.0) - rules.get('PIT', 0.0)</field>
+  </record>
+
+  <record id="rule_UNION" model="payroll.rule">
+    <field name="name">Union Fee</field>
+    <field name="code">UNION</field>
+    <field name="sequence">50</field>
+    <field name="category_id" ref="payroll_3c.cat_DED"/>
+    <field name="condition">always</field>
+    <field name="amount_type">python</field>
+    <field name="amount_python"># Union fee as % of basic (editable in VN Params)
+base = rules.get('BASIC', 0.0)
+rate = params.get('union_fee_rate', 1.0) / 100.0
+result = base * rate</field>
+  </record>
+
+  <!-- Structure: VN Standard -->
+  <record id="structure_vn_standard" model="payroll.structure">
+    <field name="name">VN Standard</field>
+    <field name="code">VN_STD</field>
+    <field name="rule_ids" eval="[(6, 0, [ref('payroll_3c.rule_BASIC'), ref('payroll_3c.rule_ALLOW'), ref('payroll_3c.rule_INS_EMP'), ref('payroll_3c.rule_INS_CMP'), ref('payroll_3c.rule_UNION'), ref('payroll_3c.rule_PIT'), ref('payroll_3c.rule_NET')])]"/>
+  </record>
+</odoo>

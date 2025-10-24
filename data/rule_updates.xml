@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo noupdate="1">
+  <!-- Force update formulas to align with engine localdict (wages/params) -->
+  <record id="rule_BASIC" model="payroll.rule">
+    <field name="amount_type">python</field>
+    <field name="amount_python">result = wages.get('base', 0.0)</field>
+  </record>
+
+  <record id="rule_ALLOW" model="payroll.rule">
+    <field name="amount_type">python</field>
+    <field name="amount_python">result = 0.0</field>
+  </record>
+
+  <record id="rule_INS_EMP" model="payroll.rule">
+    <field name="amount_type">python</field>
+    <field name="amount_python">base = wages.get('si', 0.0) or rules.get('BASIC', 0.0)
+rate = (params.get('bhxh_rate_emp', 8.0) + params.get('bhyt_rate_emp', 1.5) + params.get('bhtn_rate_emp', 1.0)) / 100.0
+result = base * rate</field>
+  </record>
+
+  <record id="rule_INS_CMP" model="payroll.rule">
+    <field name="amount_type">python</field>
+    <field name="amount_python">base = wages.get('si', 0.0) or rules.get('BASIC', 0.0)
+rate = (params.get('bhxh_rate_cmp', 17.5) + params.get('bhyt_rate_cmp', 3.0) + params.get('bhtn_rate_cmp', 1.0)) / 100.0
+result = base * rate</field>
+  </record>
+
+  <record id="rule_PIT" model="payroll.rule">
+    <field name="sequence">60</field>
+    <field name="amount_type">python</field>
+    <field name="amount_python">earn = rules.get('BASIC', 0.0) + rules.get('ALLOW', 0.0)
+deduct = params.get('personal_deduction', 11000000.0) + params.get('dependent_deduction', 4400000.0) * (dependents or 0)
+taxable = max(0.0, earn - rules.get('INS_EMP', 0.0) - deduct)
+result = taxable * 0.10</field>
+  </record>
+
+  <record id="rule_NET" model="payroll.rule">
+    <field name="sequence">80</field>
+    <field name="amount_type">python</field>
+    <field name="amount_python">result = rules.get('BASIC', 0.0) + rules.get('ALLOW', 0.0) - rules.get('INS_EMP', 0.0) - rules.get('PIT', 0.0)</field>
+  </record>
+
+  <!-- Ensure VN Standard includes UNION rule if it exists -->
+  <record id="structure_vn_standard" model="payroll.structure">
+    <field name="rule_ids" eval="[(6, 0, [ref('payroll_3c.rule_BASIC'), ref('payroll_3c.rule_ALLOW'), ref('payroll_3c.rule_INS_EMP'), ref('payroll_3c.rule_INS_CMP'), ref('payroll_3c.rule_UNION'), ref('payroll_3c.rule_PIT'), ref('payroll_3c.rule_NET')])]"/>
+  </record>
+</odoo>

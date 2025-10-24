@@ -1,0 +1,12 @@
+/* Only enable two-column layout when helper aside exists */
+.o_form_view .payroll-template-layout:has(.payroll-helper-aside) {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  grid-gap: 16px;
+  align-items: start;
+}
+
+.o_form_view .payroll-helper-aside {
+  position: sticky;
+  top: 72px;
+}

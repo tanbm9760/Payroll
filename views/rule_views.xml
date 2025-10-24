@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <!-- Categories -->
+  <record id="view_payroll_category_tree" model="ir.ui.view">
+    <field name="name">payroll.category.tree</field>
+    <field name="model">payroll.category</field>
+    <field name="arch" type="xml">
+      <tree>
+        <field name="name"/>
+        <field name="code"/>
+        <field name="type"/>
+        <field name="parent_id"/>
+      </tree>
+    </field>
+  </record>
+  <record id="view_payroll_category_form" model="ir.ui.view">
+    <field name="name">payroll.category.form</field>
+    <field name="model">payroll.category</field>
+    <field name="arch" type="xml">
+      <form>
+        <sheet>
+          <group>
+            <field name="name"/>
+            <field name="code"/>
+            <field name="type"/>
+            <field name="parent_id"/>
+          </group>
+        </sheet>
+      </form>
+    </field>
+  </record>
+  <record id="action_payroll_categories" model="ir.actions.act_window">
+    <field name="name">Categories</field>
+    <field name="res_model">payroll.category</field>
+    <field name="view_mode">tree,form</field>
+    <field name="context">{}</field>
+  </record>
+
+  <!-- Rules -->
+  <record id="view_payroll_rule_tree" model="ir.ui.view">
+    <field name="name">payroll.rule.tree</field>
+    <field name="model">payroll.rule</field>
+    <field name="arch" type="xml">
+      <tree>
+        <field name="sequence"/>
+        <field name="name"/>
+        <field name="code"/>
+        <field name="category_id"/>
+        <field name="active"/>
+      </tree>
+    </field>
+  </record>
+  <record id="view_payroll_rule_form" model="ir.ui.view">
+    <field name="name">payroll.rule.form</field>
+    <field name="model">payroll.rule</field>
+    <field name="arch" type="xml">
+      <form>
+        <sheet>
+          <group>
+            <field name="name"/>
+            <field name="code"/>
+            <field name="sequence"/>
+            <field name="category_id"/>
+            <field name="active"/>
+          </group>
+          <group string="Condition &amp; Amount">
+            <field name="condition"/>
+            <field name="condition_python"/>
+            <field name="amount_type"/>
+            <field name="amount_fix"/>
+            <field name="amount_percent"/>
+            <field name="amount_base_code"/>
+            <field name="amount_python"/>
+          </group>
+        </sheet>
+      </form>
+    </field>
+  </record>
+  <record id="action_payroll_rules" model="ir.actions.act_window">
+    <field name="name">Salary Rules</field>
+    <field name="res_model">payroll.rule</field>
+    <field name="view_mode">tree,form</field>
+  </record>
+
+  <!-- Structures -->
+  <record id="view_payroll_structure_tree" model="ir.ui.view">
+    <field name="name">payroll.structure.tree</field>
+    <field name="model">payroll.structure</field>
+    <field name="arch" type="xml">
+      <tree>
+        <field name="name"/>
+        <field name="code"/>
+      </tree>
+    </field>
+  </record>
+  <record id="view_payroll_structure_form" model="ir.ui.view">
+    <field name="name">payroll.structure.form</field>
+    <field name="model">payroll.structure</field>
+    <field name="arch" type="xml">
+      <form>
+        <header>
+          <button name="action_load_vn_defaults" type="object" string="Load VN Default Rules" class="btn-primary"/>
+        </header>
+        <sheet>
+          <group>
+            <field name="name"/>
+            <field name="code"/>
+            <field name="rule_ids" widget="many2many_tags"/>
+          </group>
+        </sheet>
+      </form>
+    </field>
+  </record>
+  <record id="action_payroll_structures" model="ir.actions.act_window">
+    <field name="name">Structures</field>
+    <field name="res_model">payroll.structure</field>
+    <field name="view_mode">tree,form</field>
+  </record>
+</odoo>

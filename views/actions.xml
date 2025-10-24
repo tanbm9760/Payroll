@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <!-- Define window actions early to avoid XMLID resolution issues in menus -->
+  <record id="action_payroll_my_payslips" model="ir.actions.act_window">
+    <field name="name">My Payslips</field>
+    <field name="res_model">payroll.payslip</field>
+    <field name="view_mode">tree,form</field>
+    <field name="domain">[("employee_user_id","=",uid)]</field>
+  </record>
+</odoo>

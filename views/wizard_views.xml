@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <record id="view_generate_payslips_wizard" model="ir.ui.view">
+    <field name="name">payroll.generate.payslips.wizard.form</field>
+    <field name="model">payroll.generate.payslips.wizard</field>
+    <field name="arch" type="xml">
+      <form string="Generate Payslips">
+        <sheet>
+          <group>
+            <field name="run_id"/>
+            <field name="date_start"/>
+            <field name="date_end"/>
+            <field name="structure_id"/>
+          </group>
+        </sheet>
+        <footer>
+          <button string="Generate" type="object" name="action_generate" class="btn-primary"/>
+          <button string="Cancel" special="cancel" class="btn-secondary"/>
+        </footer>
+      </form>
+    </field>
+  </record>
+
+  <record id="action_generate_payslips_wizard" model="ir.actions.act_window">
+    <field name="name">Generate Payslips</field>
+    <field name="res_model">payroll.generate.payslips.wizard</field>
+    <field name="view_mode">form</field>
+    <field name="target">new</field>
+    <field name="groups_id" eval="[(4, ref('payroll_3c.group_payroll_officer')), (4, ref('payroll_3c.group_payroll_manager'))]"/>
+  </record>
+</odoo>

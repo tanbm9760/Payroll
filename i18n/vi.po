@@ -1,0 +1,337 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#   * payroll_3c
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-10-14 00:00+0000\n"
+"PO-Revision-Date: 2025-10-14 00:00+0000\n"
+"Last-Translator: \n"
+"Language-Team: Vietnamese\n"
+"Language: vi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: payroll_3c
+#: model:ir.ui.view,arch_db:payroll_3c.view_payroll_sheet_form
+msgid "Generate Lines"
+msgstr "Tạo dòng"
+
+#. module: payroll_3c
+#: model:ir.ui.view,arch_db:payroll_3c.view_payroll_sheet_form
+msgid "Lines"
+msgstr "Dòng"
+
+#. module: payroll_3c
+#: model:ir.ui.view,arch_db:payroll_3c.view_payroll_sheet_form
+msgid "Create Payroll Sheet"
+msgstr "Tạo Bảng lương"
+
+#. module: payroll_3c
+#: model:ir.ui.view,arch_db:payroll_3c.view_create_sheet_wizard_form
+msgid "Create"
+msgstr "Tạo"
+
+#. module: payroll_3c
+#: model:ir.ui.view,arch_db:payroll_3c.view_create_sheet_wizard_form
+msgid "Cancel"
+msgstr "Hủy"
+
+#. module: payroll_3c
+#: model:ir.ui.view,arch_db:payroll_3c.view_generate_payslips_wizard_form
+msgid "Generate Payslips"
+msgstr "Tạo Phiếu lương"
+
+#. module: payroll_3c
+#: model:ir.ui.view,arch_db:payroll_3c.view_generate_payslips_wizard_form
+msgid "Generate"
+msgstr "Tạo"
+
+#. module: payroll_3c
+#: model:ir.ui.view,arch_db:payroll_3c.view_generate_payslips_wizard_form
+msgid "Employees"
+msgstr "Nhân viên"
+
+#. module: payroll_3c
+#: model:ir.ui.view,arch_db:payroll_3c.view_payslip_form
+msgid "Set to Draft"
+msgstr "Chuyển về Nháp"
+
+#. module: payroll_3c
+#: model:ir.ui.view,arch_db:payroll_3c.view_payslip_form
+msgid "Submit"
+msgstr "Gửi duyệt"
+
+#. module: payroll_3c
+#: model:ir.ui.view,arch_db:payroll_3c.view_payslip_form
+msgid "Approve"
+msgstr "Phê duyệt"
+
+#. module: payroll_3c
+#: model:ir.ui.view,arch_db:payroll_3c.view_payslip_form
+msgid "Mark as Done"
+msgstr "Hoàn tất"
+
+#. module: payroll_3c
+#: model:ir.ui.view,arch_db:payroll_3c.view_payslip_form
+msgid "Cancel"
+msgstr "Hủy"
+
+#. module: payroll_3c
+#: model:ir.ui.view,arch_db:payroll_3c.view_payslip_run_form
+msgid "Generate Payslips"
+msgstr "Tạo Phiếu lương"
+
+#. module: payroll_3c
+#: model:ir.ui.view,arch_db:payroll_3c.view_payslip_run_form
+msgid "Create Payroll Sheet"
+msgstr "Tạo Bảng lương"
+
+#. module: payroll_3c
+#: model:ir.ui.view,arch_db:payroll_3c.view_payslip_form
+msgid "Payslips"
+msgstr "Phiếu lương"
+
+#. module: payroll_3c
+#: model:ir.ui.view,arch_db:payroll_3c.view_params_form
+msgid "VN Payroll Parameters"
+msgstr "Tham số lương VN"
+
+#. module: payroll_3c
+#: model:ir.ui.view,arch_db:payroll_3c.view_params_form
+msgid "Deductions"
+msgstr "Giảm trừ"
+
+#. module: payroll_3c
+#: model:ir.ui.view,arch_db:payroll_3c.view_params_form
+msgid "Insurance Rates (%)"
+msgstr "Tỷ lệ Bảo hiểm (%)"
+
+#. module: payroll_3c
+#: model:ir.ui.view,arch_db:payroll_3c.view_payroll_template_form
+msgid "Auto add from Catalog"
+msgstr "Tự động thêm từ Danh mục"
+
+#. module: payroll_3c
+#: model:ir.ui.view,arch_db:payroll_3c.view_payroll_template_form
+msgid "Open Variable Catalog"
+msgstr "Mở Danh mục Biến"
+
+#. module: payroll_3c
+#: model:ir.model.fields,field_description:payroll_3c.field_payroll_sheet_line__emp_code
+msgid "Employee Code"
+msgstr "Mã nhân viên"
+
+#. module: payroll_3c
+#: model:ir.model.fields,field_description:payroll_3c.field_payroll_sheet_line__department_name
+msgid "Department"
+msgstr "Phòng ban"
+
+#. module: payroll_3c
+#: model:ir.model.fields,field_description:payroll_3c.field_payroll_sheet_line__mst
+msgid "Tax Code"
+msgstr "Mã số thuế"
+
+#. module: payroll_3c
+#: model:ir.model.fields,field_description:payroll_3c.field_payroll_sheet_line__dependent_count
+msgid "Dependents"
+msgstr "Người phụ thuộc"
+
+#. module: payroll_3c
+#: model:ir.model.fields,field_description:payroll_3c.field_payroll_sheet_line__bhxh_no
+msgid "BHXH No"
+msgstr "Số BHXH"
+
+#. module: payroll_3c
+#: model:ir.model.fields,field_description:payroll_3c.field_payroll_sheet_line__si_wage
+msgid "SI Wage"
+msgstr "Lương đóng BHXH"
+
+#. module: payroll_3c
+#: model:ir.model.fields,field_description:payroll_3c.field_payroll_sheet_line__base_wage
+msgid "Base Wage"
+msgstr "Lương cơ bản"
+
+#. module: payroll_3c
+#: model:ir.model.fields,field_description:payroll_3c.field_payroll_sheet_line__wage_type
+msgid "Wage Type"
+msgstr "Kiểu lương"
+
+#. module: payroll_3c
+#: model:ir.model.fields,field_description:payroll_3c.field_payroll_sheet_line__allow_lunch
+msgid "Allow Lunch"
+msgstr "Phụ cấp ăn trưa"
+
+#. module: payroll_3c
+#: model:ir.model.fields,field_description:payroll_3c.field_payroll_sheet_line__work_day
+msgid "Work Day"
+msgstr "Công chuẩn"
+
+#. module: payroll_3c
+#: model:ir.model.fields,field_description:payroll_3c.field_payroll_sheet_line__points
+msgid "Points"
+msgstr "Điểm công"
+
+#. module: payroll_3c
+#: model:ir.model.fields,field_description:payroll_3c.field_payroll_sheet_line__unpaid_lf_point
+msgid "Unpaid Leave"
+msgstr "Nghỉ không lương"
+
+#. module: payroll_3c
+#: model:ir.model.fields,field_description:payroll_3c.field_payroll_sheet_line__sum_late
+msgid "Sum Late"
+msgstr "Số lần đi muộn"
+
+#. module: payroll_3c
+#: model:ir.model.fields,field_description:payroll_3c.field_payroll_sheet_line__other_values
+msgid "Other Values"
+msgstr "Giá trị khác"
+
+#. module: payroll_3c
+#: model:ir.actions.server,name:payroll_3c.ir_action_refresh_variable_catalog
+msgid "Refresh Variable Catalog"
+msgstr "Làm mới Danh mục Biến"
+
+#. module: payroll_3c
+#: model:ir.actions.server,name:payroll_3c.ir_action_delete_variables
+msgid "Delete Selected Variables"
+msgstr "Xóa Biến đã chọn"
+
+#. module: payroll_3c
+#: model:ir.actions.server,name:payroll_3c.ir_action_delete_templates
+msgid "Delete Selected Templates"
+msgstr "Xóa Mẫu đã chọn"
+
+#. module: payroll_3c
+#: model:ir.ui.view,arch_db:payroll_3c.view_payroll_payslip_form
+msgid "Compute Lines"
+msgstr "Tính dòng"
+
+#. module: payroll_3c
+#: model:ir.ui.view,arch_db:payroll_3c.view_payroll_run_form
+msgid "Sync Points &amp; Compute"
+msgstr "Đồng bộ công &amp; Tính lương"
+
+#. module: payroll_3c
+#: model:ir.ui.view,arch_db:payroll_3c.view_payroll_run_form
+msgid "Payslips"
+msgstr "Phiếu lương"
+
+#. module: payroll_3c
+#: model:ir.ui.view,arch_db:payroll_3c.view_payroll_sheet_form
+msgid "Update Timesheet Points"
+msgstr "Cập nhật Công từ chấm công"
+
+#. module: payroll_3c
+#: model:ir.ui.view,arch_db:payroll_3c.view_payroll_sheet_form
+msgid "Timesheet Cycle"
+msgstr "Kỳ chấm công"
+
+#. module: payroll_3c
+#: model:ir.actions.act_window,name:payroll_3c.action_payroll_sheets
+msgid "Payroll Sheets"
+msgstr "Bảng lương"
+
+#. module: payroll_3c
+#: model:ir.actions.act_window,name:payroll_3c.action_payroll_runs
+msgid "Payroll Batches"
+msgstr "Đợt tính lương"
+
+#. module: payroll_3c
+#: model:ir.actions.act_window,name:payroll_3c.action_payroll_payslips
+msgid "Payslips"
+msgstr "Phiếu lương"
+
+#. module: payroll_3c
+#: model:ir.actions.act_window,name:payroll_3c.action_payroll_my_payslips
+msgid "My Payslips"
+msgstr "Phiếu lương của tôi"
+
+#. module: payroll_3c
+#: model:ir.ui.menu,name:payroll_3c.menu_payroll_root
+msgid "Payroll"
+msgstr "Tiền lương"
+
+#. module: payroll_3c
+#: model:ir.ui.menu,name:payroll_3c.menu_payroll_operations
+msgid "Operations"
+msgstr "Nghiệp vụ"
+
+#. module: payroll_3c
+#: model:ir.ui.menu,name:payroll_3c.menu_payroll_approvals
+msgid "Approvals"
+msgstr "Phê duyệt"
+
+#. module: payroll_3c
+#: model:ir.ui.menu,name:payroll_3c.menu_payroll_configuration
+msgid "Configuration"
+msgstr "Cấu hình"
+
+#. module: payroll_3c
+#: model:ir.ui.menu,name:payroll_3c.menu_payroll_rules
+msgid "Salary Rules"
+msgstr "Quy tắc lương"
+
+#. module: payroll_3c
+#: model:ir.ui.menu,name:payroll_3c.menu_payroll_categories
+msgid "Categories"
+msgstr "Nhóm"
+
+#. module: payroll_3c
+#: model:ir.ui.menu,name:payroll_3c.menu_payroll_structures
+msgid "Structures"
+msgstr "Cấu trúc"
+
+#. module: payroll_3c
+#: model:ir.ui.menu,name:payroll_3c.menu_payroll_params
+msgid "VN Parameters"
+msgstr "Tham số VN"
+
+#. module: payroll_3c
+#: model:ir.ui.menu,name:payroll_3c.menu_salary_profiles
+msgid "Salary Profiles"
+msgstr "Hồ sơ lương"
+
+#. module: payroll_3c
+#: model:ir.ui.menu,name:payroll_3c.menu_payroll_variables
+msgid "Variable Catalog"
+msgstr "Danh mục Biến"
+
+#. module: payroll_3c
+#: model:ir.ui.menu,name:payroll_3c.menu_payroll_variables_refresh
+msgid "Refresh Variable Catalog"
+msgstr "Làm mới Danh mục Biến"
+
+#. module: payroll_3c
+#: model:ir.ui.menu,name:payroll_3c.menu_payroll_templates
+msgid "Payroll Templates"
+msgstr "Mẫu bảng lương"
+
+#. module: payroll_3c
+#: model:ir.ui.view,arch_db:payroll_3c.view_confirm_delete_wizard_form
+msgid "Confirm Delete"
+msgstr "Xác nhận xóa"
+
+#. module: payroll_3c
+#: model:ir.actions.act_window,name:payroll_3c.action_confirm_delete_payslip
+msgid "Confirm Delete Payslip"
+msgstr "Xác nhận xóa Phiếu lương"
+
+#. module: payroll_3c
+#: model:ir.actions.act_window,name:payroll_3c.action_confirm_delete_batch
+msgid "Confirm Delete Batch"
+msgstr "Xác nhận xóa Đợt lương"
+
+#. module: payroll_3c
+#: model:ir.actions.act_window,name:payroll_3c.action_confirm_delete_sheet
+msgid "Confirm Delete Sheet"
+msgstr "Xác nhận xóa Bảng lương"
+
+#. module: payroll_3c
+#: model:ir.ui.view,arch_db:payroll_3c.view_payroll_run_form
+msgid "Compute Payslips"
+msgstr "Tính phiếu lương"

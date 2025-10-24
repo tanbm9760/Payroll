@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <menuitem id="menu_payroll_root" name="Payroll" sequence="30"
+            web_icon="payroll_3c,static/description/icon.png"
+            groups="payroll_3c.group_payroll_employee,payroll_3c.group_payroll_officer,payroll_3c.group_payroll_manager,payroll_3c.group_payroll_approver"/>
+
+  <menuitem id="menu_payroll_self_service" name="Phiếu lương của tôi" parent="menu_payroll_root" sequence="5"
+            groups="payroll_3c.group_payroll_employee,payroll_3c.group_payroll_officer,payroll_3c.group_payroll_manager,payroll_3c.group_payroll_approver"
+            action="action_payroll_my_payslips"/>
+
+  <!-- Hide the Operations hub and direct links to Payslips; lift Batches & Sheets to top level -->
+  <!-- <menuitem id="menu_payroll_operations" name="Operations" parent="menu_payroll_root" sequence="10"
+            groups="base.group_no_one"/> -->
+  <!-- <menuitem id="menu_payslips" name="Payslips" parent="menu_payroll_root" action="action_payroll_payslips"
+            groups="base.group_no_one"/> -->
+  <menuitem id="menu_payslip_runs" name="Chu kì lương" parent="menu_payroll_root" sequence="15"
+            action="action_payroll_runs" groups="payroll_3c.group_payroll_officer,payroll_3c.group_payroll_manager"/>
+  <menuitem id="menu_payroll_sheets" name="Bảng lương" parent="menu_payroll_root" sequence="16"
+            action="action_payroll_sheets" groups="payroll_3c.group_payroll_officer,payroll_3c.group_payroll_manager"/>
+
+  <menuitem id="menu_payroll_approvals" name="Approvals" parent="menu_payroll_root" sequence="20"
+            groups="payroll_3c.group_payroll_approver,payroll_3c.group_payroll_manager"/>
+
+  <menuitem id="menu_payroll_configuration" name="Configuration" parent="menu_payroll_root" sequence="90"
+            groups="payroll_3c.group_payroll_officer,payroll_3c.group_payroll_manager"/>
+  <menuitem id="menu_payroll_rules" name="Salary Rules" parent="menu_payroll_configuration" action="action_payroll_rules"/>
+  <menuitem id="menu_payroll_categories" name="Categories" parent="menu_payroll_configuration" action="action_payroll_categories"/>
+  <menuitem id="menu_payroll_structures" name="Structures" parent="menu_payroll_configuration" action="action_payroll_structures"/>
+  <menuitem id="menu_payroll_params" name="VN Parameters" parent="menu_payroll_configuration" action="action_open_vn_params_singleton"/>
+  <menuitem id="menu_salary_profiles" name="Salary Profiles" parent="menu_payroll_configuration" action="action_salary_profiles"/>
+  <menuitem id="menu_payroll_variables" name="Variable Catalog" parent="menu_payroll_configuration" action="action_payroll_variables"/>
+  <menuitem id="menu_payroll_variables_refresh" name="Refresh Variable Catalog" parent="menu_payroll_configuration"
+            action="ir_action_refresh_variable_catalog" groups="payroll_3c.group_payroll_manager"/>
+  <menuitem id="menu_payroll_templates" name="Payroll Templates" parent="menu_payroll_configuration" action="action_payroll_templates"/>
+</odoo>

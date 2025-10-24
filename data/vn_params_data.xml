@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+  <record id="vn_params_default" model="payroll.vn.params">
+    <field name="name">Vietnam Payroll Parameters</field>
+    <!-- Seed sensible defaults; can be edited by users later -->
+    <field name="personal_deduction">11000000</field>
+    <field name="dependent_deduction">4400000</field>
+  <field name="union_fee_rate">1</field>
+    <field name="bhxh_rate_emp">8</field>
+    <field name="bhxh_rate_cmp">17.5</field>
+    <field name="bhyt_rate_emp">1.5</field>
+    <field name="bhyt_rate_cmp">3</field>
+    <field name="bhtn_rate_emp">1</field>
+    <field name="bhtn_rate_cmp">1</field>
+  </record>
+</odoo>

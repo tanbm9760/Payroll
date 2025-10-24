@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <record id="view_payroll_vn_params_form" model="ir.ui.view">
+    <field name="name">payroll.vn.params.form</field>
+    <field name="model">payroll.vn.params</field>
+    <field name="arch" type="xml">
+      <form string="VN Payroll Parameters">
+        <header>
+          <button name="action_apply_vn_defaults" type="object" class="btn-secondary" string="Apply VN Defaults"/>
+        </header>
+        <sheet>
+          <group string="Deductions">
+            <field name="personal_deduction"/>
+            <field name="dependent_deduction"/>
+          </group>
+            <group string="Salary Profile Source">
+              <field name="use_source"/>
+            </group>
+          <group string="Insurance Rates (%)">
+            <field name="bhxh_rate_emp"/>
+            <field name="bhxh_rate_cmp"/>
+            <field name="bhyt_rate_emp"/>
+            <field name="bhyt_rate_cmp"/>
+            <field name="bhtn_rate_emp"/>
+            <field name="bhtn_rate_cmp"/>
+            <field name="union_fee_rate"/>
+          </group>
+        </sheet>
+      </form>
+    </field>
+  </record>
+  <record id="action_payroll_vn_params" model="ir.actions.act_window">
+    <field name="name">VN Parameters</field>
+    <field name="res_model">payroll.vn.params</field>
+    <field name="view_mode">form</field>
+    <field name="context">{"default_name": "Vietnam Payroll Parameters"}</field>
+    <field name="target">current</field>
+  </record>
+
+  <record id="action_open_vn_params_singleton" model="ir.actions.server">
+    <field name="name">Open VN Parameters</field>
+    <field name="model_id" ref="model_payroll_vn_params"/>
+    <field name="state">code</field>
+  <field name="code"><![CDATA[
+rec = env.ref('payroll_3c.vn_params_default', raise_if_not_found=False)
+if not rec:
+  rec = env['payroll.vn.params'].search([('name', '=', 'Vietnam Payroll Parameters')], limit=1)
+if not rec:
+  rec = env['payroll.vn.params'].create({
+    'name': 'Vietnam Payroll Parameters',
+    'personal_deduction': 11000000.0,
+    'dependent_deduction': 4400000.0,
+    'union_fee_rate': 1.0,
+    'bhxh_rate_emp': 8.0,
+    'bhxh_rate_cmp': 17.5,
+    'bhyt_rate_emp': 1.5,
+    'bhyt_rate_cmp': 3.0,
+    'bhtn_rate_emp': 1.0,
+    'bhtn_rate_cmp': 1.0,
+  })
+action = {
+  'type': 'ir.actions.act_window',
+  'name': 'VN Parameters',
+  'res_model': 'payroll.vn.params',
+  'view_mode': 'form',
+  'res_id': rec.id,
+  'target': 'current',
+}
+    ]]></field>
+  </record>
+</odoo>
