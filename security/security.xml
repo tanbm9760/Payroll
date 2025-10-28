@@ -57,4 +57,61 @@
     <field name="domain_force">[]</field>
     <field name="groups" eval="[(4, ref('payroll_3c.group_payroll_approver'))]"/>
   </record>
+
+  <!-- Record Rules: KPI records visibility -->
+  <record id="rule_kpi_record_employee_own" model="ir.rule">
+    <field name="name">KPI: Employee sees own records</field>
+    <field name="model_id" ref="model_payroll_kpi_record"/>
+    <field name="domain_force">[("employee_user_id", "=", user.id)]</field>
+    <field name="groups" eval="[(4, ref('payroll_3c.group_payroll_employee'))]"/>
+  </record>
+
+  <record id="rule_kpi_record_officer_all" model="ir.rule">
+    <field name="name">KPI: Officer sees all</field>
+    <field name="model_id" ref="model_payroll_kpi_record"/>
+    <field name="domain_force">[]</field>
+    <field name="groups" eval="[(4, ref('payroll_3c.group_payroll_officer'))]"/>
+  </record>
+
+  <record id="rule_kpi_record_manager_all" model="ir.rule">
+    <field name="name">KPI: Manager sees all</field>
+    <field name="model_id" ref="model_payroll_kpi_record"/>
+    <field name="domain_force">[]</field>
+    <field name="groups" eval="[(4, ref('payroll_3c.group_payroll_manager'))]"/>
+  </record>
+
+  <!-- Record Rules: KPI Adjustment Records visibility -->
+  <record id="rule_kpi_adjust_record_employee_own" model="ir.rule">
+    <field name="name">KPI Adjust: Employee sees own</field>
+    <field name="model_id" ref="model_payroll_kpi_adjust_record"/>
+    <field name="domain_force">[("employee_user_id", "=", user.id)]</field>
+    <field name="perm_read" eval="True"/>
+    <field name="perm_write" eval="False"/>
+    <field name="perm_create" eval="False"/>
+    <field name="perm_unlink" eval="False"/>
+    <field name="groups" eval="[(4, ref('payroll_3c.group_payroll_employee'))]"/>
+  </record>
+
+  <record id="rule_kpi_adjust_record_employee_manual_write" model="ir.rule">
+    <field name="name">KPI Adjust: Employee edit own manual only</field>
+    <field name="model_id" ref="model_payroll_kpi_adjust_record"/>
+    <field name="domain_force">[("employee_user_id", "=", user.id), ("source_type", "=", "manual")]</field>
+    <field name="perm_read" eval="False"/>
+    <field name="perm_write" eval="True"/>
+    <field name="perm_create" eval="True"/>
+    <field name="perm_unlink" eval="True"/>
+    <field name="groups" eval="[(4, ref('payroll_3c.group_payroll_employee'))]"/>
+  </record>
+  <record id="rule_kpi_adjust_record_officer_all" model="ir.rule">
+    <field name="name">KPI Adjust: Officer sees all</field>
+    <field name="model_id" ref="model_payroll_kpi_adjust_record"/>
+    <field name="domain_force">[]</field>
+    <field name="groups" eval="[(4, ref('payroll_3c.group_payroll_officer'))]"/>
+  </record>
+  <record id="rule_kpi_adjust_record_manager_all" model="ir.rule">
+    <field name="name">KPI Adjust: Manager sees all</field>
+    <field name="model_id" ref="model_payroll_kpi_adjust_record"/>
+    <field name="domain_force">[]</field>
+    <field name="groups" eval="[(4, ref('payroll_3c.group_payroll_manager'))]"/>
+  </record>
 </odoo>

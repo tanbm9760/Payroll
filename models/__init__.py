@@ -5,3 +5,7 @@ from . import variable
 from . import template
 from . import sheet
 from . import salary_profile
+from . import kpi
+from . import kpi_engine
+from . import kpi_sheet
+from . import kpi_adjust

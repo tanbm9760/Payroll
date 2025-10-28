@@ -34,3 +34,26 @@ access_payroll_sheet_line_officer,payroll.sheet.line officer,model_payroll_sheet
 payroll_emp_model_read_employee,employee3c models read for payroll employee,Employee_3c.model_employee3c_employee_base,payroll_3c.group_payroll_employee,1,0,0,0
 payroll_emp_dept_read_employee,employee3c department read for payroll employee,Employee_3c.model_employee3c_department,payroll_3c.group_payroll_employee,1,0,0,0
 payroll_emp_calendar_read_employee,employee3c calendar read for payroll employee,Employee_3c.model_employee3c_calendar2,payroll_3c.group_payroll_employee,1,0,0,0
+payroll_kpi_group_officer,payroll KPI group officer,model_payroll_kpi_group,payroll_3c.group_payroll_officer,1,1,1,0
+payroll_kpi_group_manager,payroll KPI group manager,model_payroll_kpi_group,payroll_3c.group_payroll_manager,1,1,1,1
+payroll_kpi_group_employee_read,payroll KPI group employee read,model_payroll_kpi_group,payroll_3c.group_payroll_employee,1,0,0,0
+payroll_kpi_label_officer,payroll KPI label officer,model_payroll_kpi_label,payroll_3c.group_payroll_officer,1,1,1,0
+payroll_kpi_label_manager,payroll KPI label manager,model_payroll_kpi_label,payroll_3c.group_payroll_manager,1,1,1,1
+payroll_kpi_label_employee_read,payroll KPI label employee read,model_payroll_kpi_label,payroll_3c.group_payroll_employee,1,0,0,0
+payroll_kpi_quality_officer_read,payroll KPI quality officer read,model_payroll_kpi_quality_profile,payroll_3c.group_payroll_officer,1,0,0,0
+payroll_kpi_quality_manager,payroll KPI quality manager,model_payroll_kpi_quality_profile,payroll_3c.group_payroll_manager,1,1,1,1
+payroll_kpi_period_officer,payroll KPI period officer,model_payroll_kpi_period,payroll_3c.group_payroll_officer,1,1,1,0
+payroll_kpi_period_manager,payroll KPI period manager,model_payroll_kpi_period,payroll_3c.group_payroll_manager,1,1,1,1
+payroll_kpi_period_employee_read,payroll KPI period employee read,model_payroll_kpi_period,payroll_3c.group_payroll_employee,1,0,0,0
+payroll_kpi_record_employee_read,payroll KPI record employee read,model_payroll_kpi_record,payroll_3c.group_payroll_employee,1,0,0,0
+payroll_kpi_record_officer_read,payroll KPI record officer read,model_payroll_kpi_record,payroll_3c.group_payroll_officer,1,0,0,0
+payroll_kpi_record_manager,payroll KPI record manager,model_payroll_kpi_record,payroll_3c.group_payroll_manager,1,1,1,1
+payroll_kpi_sheet_officer,payroll KPI sheet officer,model_payroll_kpi_sheet,payroll_3c.group_payroll_officer,1,1,1,0
+payroll_kpi_sheet_manager,payroll KPI sheet manager,model_payroll_kpi_sheet,payroll_3c.group_payroll_manager,1,1,1,1
+payroll_kpi_sheet_line_officer,payroll KPI sheet line officer,model_payroll_kpi_sheet_line,payroll_3c.group_payroll_officer,1,1,1,0
+payroll_kpi_sheet_line_manager,payroll KPI sheet line manager,model_payroll_kpi_sheet_line,payroll_3c.group_payroll_manager,1,1,1,1
+payroll_kpi_adjust_rule_officer,payroll KPI adjust rule officer,model_payroll_kpi_adjust_rule,payroll_3c.group_payroll_officer,1,0,0,0
+payroll_kpi_adjust_rule_manager,payroll KPI adjust rule manager,model_payroll_kpi_adjust_rule,payroll_3c.group_payroll_manager,1,1,1,1
+payroll_kpi_adjust_record_employee,payroll KPI adjust record employee,model_payroll_kpi_adjust_record,payroll_3c.group_payroll_employee,1,1,1,0
+payroll_kpi_adjust_record_officer,payroll KPI adjust record officer,model_payroll_kpi_adjust_record,payroll_3c.group_payroll_officer,1,1,1,1
+payroll_kpi_adjust_record_manager,payroll KPI adjust record manager,model_payroll_kpi_adjust_record,payroll_3c.group_payroll_manager,1,1,1,1

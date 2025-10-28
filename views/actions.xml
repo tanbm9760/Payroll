@@ -7,4 +7,31 @@
     <field name="view_mode">tree,form</field>
     <field name="domain">[("employee_user_id","=",uid)]</field>
   </record>
+
+  <!-- KPI Config Actions -->
+  <record id="action_kpi_groups" model="ir.actions.act_window">
+    <field name="name">KPI Groups</field>
+    <field name="res_model">payroll.kpi_group</field>
+    <field name="view_mode">tree,form</field>
+    <field name="context">{"search_default_active": 1}</field>
+  </record>
+
+  <record id="action_kpi_labels" model="ir.actions.act_window">
+    <field name="name">KPI Labels</field>
+    <field name="res_model">payroll.kpi_label</field>
+    <field name="view_mode">tree,form</field>
+    <field name="context">{"search_default_active": 1}</field>
+  </record>
+
+  <record id="action_kpi_quality_profiles" model="ir.actions.act_window">
+    <field name="name">KPI Quality Profiles</field>
+    <field name="res_model">payroll.kpi_quality_profile</field>
+    <field name="view_mode">tree,form</field>
+  </record>
+
+  <record id="action_kpi_periods" model="ir.actions.act_window">
+    <field name="name">KPI Periods</field>
+    <field name="res_model">payroll.kpi_period</field>
+    <field name="view_mode">tree,form</field>
+  </record>
 </odoo>

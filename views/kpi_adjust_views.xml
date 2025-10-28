@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <!-- Adjustment Rules -->
+  <record id="view_kpi_adjust_rule_tree" model="ir.ui.view">
+    <field name="name">payroll.kpi_adjust_rule.tree</field>
+    <field name="model">payroll.kpi_adjust_rule</field>
+    <field name="arch" type="xml">
+      <tree>
+        <field name="sequence"/>
+        <field name="name"/>
+        <field name="code"/>
+        <field name="kind"/>
+        <field name="points_per_occurrence"/>
+        <field name="source_type"/>
+        <field name="variable_key"/>
+        <field name="active"/>
+      </tree>
+    </field>
+  </record>
+  <record id="view_kpi_adjust_rule_form" model="ir.ui.view">
+    <field name="name">payroll.kpi_adjust_rule.form</field>
+    <field name="model">payroll.kpi_adjust_rule</field>
+    <field name="arch" type="xml">
+      <form>
+        <sheet>
+          <group>
+            <field name="name"/>
+            <field name="code"/>
+            <field name="sequence"/>
+            <field name="kind"/>
+            <field name="points_per_occurrence"/>
+            <field name="source_type"/>
+            <field name="variable_key" invisible="source_type != 'auto'"/>
+            <field name="active"/>
+          </group>
+          <group>
+            <field name="description"/>
+          </group>
+        </sheet>
+      </form>
+    </field>
+  </record>
+  <record id="action_kpi_adjust_rules" model="ir.actions.act_window">
+    <field name="name">KPI Adjust Rules</field>
+    <field name="res_model">payroll.kpi_adjust_rule</field>
+    <field name="view_mode">tree,form</field>
+  </record>
+
+  <!-- Adjustment Records -->
+  <record id="view_kpi_adjust_record_tree" model="ir.ui.view">
+    <field name="name">payroll.kpi_adjust_record.tree</field>
+    <field name="model">payroll.kpi_adjust_record</field>
+    <field name="arch" type="xml">
+      <tree>
+        <field name="employee_id"/>
+        <field name="period_id"/>
+        <field name="rule_id"/>
+        <field name="occurrences"/>
+        <field name="total_points"/>
+        <field name="note"/>
+      </tree>
+    </field>
+  </record>
+  <record id="view_kpi_adjust_record_form" model="ir.ui.view">
+    <field name="name">payroll.kpi_adjust_record.form</field>
+    <field name="model">payroll.kpi_adjust_record</field>
+    <field name="arch" type="xml">
+      <form>
+        <sheet>
+          <group>
+            <field name="employee_id"/>
+            <field name="period_id"/>
+            <field name="payslip_id"/>
+            <field name="rule_id"/>
+            <field name="occurrences"/>
+            <field name="total_points" readonly="1"/>
+            <field name="note"/>
+          </group>
+        </sheet>
+      </form>
+    </field>
+  </record>
+  <record id="action_kpi_adjust_records" model="ir.actions.act_window">
+    <field name="name">KPI Adjustments</field>
+    <field name="res_model">payroll.kpi_adjust_record</field>
+    <field name="view_mode">tree,form</field>
+    <field name="context">{"search_default_group_by_employee": 0}</field>
+  </record>
+
+  <!-- My KPI Adjustments (only own) -->
+  <record id="action_my_kpi_adjustments" model="ir.actions.act_window">
+    <field name="name">KPI cộng/trừ của tôi</field>
+    <field name="res_model">payroll.kpi_adjust_record</field>
+    <field name="view_mode">tree,form</field>
+    <field name="domain">[("employee_user_id", "=", uid)]</field>
+    <field name="context">{}</field>
+  </record>
+</odoo>

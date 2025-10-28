@@ -5,15 +5,16 @@
     'version': '17.0.1.0.0',
     'author': '3C',
     'website': '',
-    'category': 'payroll',
+    'category': 'Human Resources/payroll',
     'license': 'LGPL-3',
-    'depends': ['base', 'Employee_3c'],  # use Employee_3c as employee source instead of hr
+    'depends': ['base', 'employee_3c', 'project_3c', 'timesheet_3c'],  # depends on Project 3C for task/tag models
     'data': [
         'security/security.xml',
         'security/ir.model.access.csv',
         # Actions first to satisfy menu references
         'views/actions.xml',
     'data/sequence.xml',
+    'data/kpi_default_quality.xml',
     'data/vn_params_data.xml',
     'data/rule_structure_data.xml',
     'data/rule_updates.xml',
@@ -27,7 +28,14 @@
         'views/sheet_views.xml',
         'views/rule_views.xml',
         'views/params_views.xml',
+    'views/kpi_sheet_views.xml',
+    'views/kpi_record_views.xml',
+        'views/kpi_group_views.xml',
+        'views/kpi_label_views.xml',
+        'views/kpi_quality_views.xml',
+        'views/kpi_period_views.xml',
         'views/payslip_views.xml',
+        'views/kpi_adjust_views.xml',
         'views/menu.xml',
     ],
     'assets': {

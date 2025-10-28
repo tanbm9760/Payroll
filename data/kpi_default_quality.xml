@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo noupdate="1">
+  <record id="kpi_quality_default" model="payroll.kpi_quality_profile">
+    <field name="name">Default</field>
+    <field name="coef_ontime">1.0</field>
+    <field name="coef_late">0.5</field>
+    <field name="coef_overdue">0.2</field>
+    <field name="active">True</field>
+  </record>
+</odoo>

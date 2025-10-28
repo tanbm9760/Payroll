@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <!-- Tree/Form for KPI Records -->
+  <record id="view_kpi_record_tree" model="ir.ui.view">
+    <field name="name">payroll.kpi.record.tree</field>
+    <field name="model">payroll.kpi_record</field>
+    <field name="arch" type="xml">
+      <tree>
+        <field name="period_id"/>
+        <field name="group_id"/>
+        <field name="score" sum="Total"/>
+      </tree>
+    </field>
+  </record>
+
+  <record id="view_kpi_record_form" model="ir.ui.view">
+    <field name="name">payroll.kpi.record.form</field>
+    <field name="model">payroll.kpi_record</field>
+    <field name="arch" type="xml">
+      <form string="KPI Record">
+        <sheet>
+          <group>
+            <field name="employee_id" readonly="1"/>
+            <field name="period_id" readonly="1"/>
+            <field name="group_id" readonly="1"/>
+            <field name="score" readonly="1"/>
+          </group>
+          <group string="Details">
+            <field name="details_html" readonly="1"/>
+          </group>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <!-- Action: My KPI -->
+  <record id="action_kpi_my_records" model="ir.actions.act_window">
+    <field name="name">My KPI</field>
+    <field name="res_model">payroll.kpi_record</field>
+    <field name="view_mode">tree,form</field>
+    <field name="domain">[("employee_user_id", "=", uid)]</field>
+    <field name="context">{
+      'search_default_groupby_period': 1
+    }</field>
+  </record>
+
+</odoo>

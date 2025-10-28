@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <record id="view_kpi_group_tree" model="ir.ui.view">
+    <field name="name">payroll.kpi_group.tree</field>
+    <field name="model">payroll.kpi_group</field>
+    <field name="arch" type="xml">
+      <tree>
+        <field name="sequence"/>
+        <field name="code"/>
+        <field name="name"/>
+        <field name="weight"/>
+        <field name="active"/>
+      </tree>
+    </field>
+  </record>
+
+  <record id="view_kpi_group_form" model="ir.ui.view">
+    <field name="name">payroll.kpi_group.form</field>
+    <field name="model">payroll.kpi_group</field>
+    <field name="arch" type="xml">
+      <form>
+        <sheet>
+          <group>
+            <field name="sequence"/>
+            <field name="code"/>
+            <field name="name"/>
+            <field name="weight"/>
+            <field name="active"/>
+          </group>
+          <notebook>
+            <page string="Labels">
+              <field name="label_ids">
+                <tree editable="bottom">
+                  <field name="name"/>
+                  <field name="tag_id"/>
+                  <field name="weight"/>
+                  <field name="active"/>
+                </tree>
+              </field>
+            </page>
+          </notebook>
+        </sheet>
+      </form>
+    </field>
+  </record>
+</odoo>

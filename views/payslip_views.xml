@@ -5,7 +5,7 @@
     <field name="name">payroll.payslip.tree</field>
     <field name="model">payroll.payslip</field>
     <field name="arch" type="xml">
-      <tree create="0" edit="0" delete="0">
+  <tree create="0" edit="0" delete="1">
         <field name="name"/>
         <field name="employee_id"/>
         <field name="employee_department_id"/>
@@ -46,13 +46,108 @@
             <field name="run_id" readonly="1"/>
           </group>
           <notebook>
-            <page string="Lines">
+            <page string="Payslips">
               <field name="line_ids">
                 <tree create="0" edit="0" delete="0">
                   <field name="name" readonly="1"/>
                   <field name="total" readonly="1"/>
                 </tree>
               </field>
+            </page>
+            <page string="PayrollSheet">
+              <group>
+                <field name="sheet_work_day" readonly="1"/>
+                <field name="sheet_points" readonly="1"/>
+              </group>
+            </page>
+            <page string="KPI">
+              <group>
+                <field name="kpi_total_score" readonly="1"/>
+              </group>
+              <!-- Render consolidated KPI details full width by placing field at page level -->
+              <field name="kpi_details_html" widget="html" nolabel="1" readonly="1" class="oe_inline"/>
+              <!-- Full-width KPI adjustments summary -->
+              <separator string="Điểm cộng / trừ"/>
+              <div class="oe_button_box" role="toolbar" aria-label="Actions">
+                <button name="action_save_kpi_adjustments" type="object" string="Lưu cộng/trừ" class="btn-primary"/>
+              </div>
+              <div class="o_form_view">
+                <table class="o_list_view table table-sm">
+                  <tbody>
+                    <tr>
+                      <td style="width:25%">KPI Cộng (%)</td>
+                      <td><field name="kpi_adj_add" readonly="1"/></td>
+                    </tr>
+                    <tr>
+                      <td>KPI Trừ (%)</td>
+                      <td><field name="kpi_adj_sub" readonly="1"/></td>
+                    </tr>
+                    <tr>
+                      <td>KPI Cộng/Trừ (ròng %)</td>
+                      <td><field name="kpi_adj_net" readonly="1"/></td>
+                    </tr>
+                    <tr>
+                      <td>KPI Cuối cùng (%)</td>
+                      <td><field name="kpi_final_total" readonly="1"/></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <field name="employee_id" invisible="1"/>
+              <field name="kpi_period_id" invisible="1"/>
+              <field name="kpi_record_ids" invisible="1"/>
+              <field name="kpi_total_score" invisible="1"/>
+              <field name="kpi_details_html" invisible="1"/>
+
+              <!-- Full-width inline editor for KPI Adjustments per payslip -->
+              <separator string="Các dòng cộng/trừ KPI cho phiếu lương này"/>
+              <field name="adjust_record_ids" context="{
+                  'default_employee_id': employee_id,
+                  'default_period_id': kpi_period_id,
+                  'default_payslip_id': id
+                }" nolabel="1">
+                <tree editable="bottom">
+                  <field name="rule_id" domain="[('source_type','=','manual'),('active','=',True)]"/>
+                  <field name="occurrences" readonly="source_type != 'manual'"/>
+                  <field name="total_points" readonly="1"/>
+                  <field name="note" readonly="source_type != 'manual'"/>
+                  <field name="source_type" invisible="1"/>
+                </tree>
+                <form>
+                  <sheet>
+                    <group>
+                      <field name="rule_id" domain="[('source_type','=','manual'),('active','=',True)]" readonly="source_type != 'manual'"/>
+                      <field name="occurrences" readonly="source_type != 'manual'"/>
+                      <field name="total_points" readonly="1"/>
+                      <field name="note" readonly="source_type != 'manual'"/>
+                      <field name="employee_id" invisible="1"/>
+                      <field name="period_id" invisible="1"/>
+                      <field name="payslip_id" invisible="1"/>
+                      <field name="source_type" invisible="1"/>
+                    </group>
+                  </sheet>
+                </form>
+              </field>
+              <field name="kpi_record_ids" context="{'default_employee_id': employee_id}" nolabel="1">
+                <tree create="0" edit="0" delete="0">
+                  <field name="group_id"/>
+                  <field name="score"/>
+                </tree>
+                <form string="KPI Record">
+                  <sheet>
+                    <group>
+                      <field name="employee_id" readonly="1"/>
+                      <field name="period_id" readonly="1"/>
+                      <field name="group_id" readonly="1"/>
+                      <field name="score" readonly="1"/>
+                    </group>
+                    <group string="Details">
+                      <field name="details_html" readonly="1"/>
+                    </group>
+                  </sheet>
+                </form>
+              </field>
+              <!-- For editing adjustments, use dedicated 'My KPI Adjustments' menu/action -->
             </page>
           </notebook>
         </sheet>
@@ -103,7 +198,7 @@
           <notebook>
             <page string="Payslips">
               <field name="slip_ids">
-                <tree create="0" edit="0" delete="0">
+                <tree create="0" edit="0" delete="1">
                   <field name="name"/>
                   <field name="employee_id"/>
                   <field name="employee_department_id"/>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <record id="view_kpi_period_tree" model="ir.ui.view">
+    <field name="name">payroll.kpi_period.tree</field>
+    <field name="model">payroll.kpi_period</field>
+    <field name="arch" type="xml">
+      <tree>
+        <field name="name"/>
+        <field name="date_start"/>
+        <field name="date_end"/>
+        <field name="state"/>
+        <field name="active"/>
+      </tree>
+    </field>
+  </record>
+
+  <record id="view_kpi_period_form" model="ir.ui.view">
+    <field name="name">payroll.kpi_period.form</field>
+    <field name="model">payroll.kpi_period</field>
+    <field name="arch" type="xml">
+      <form>
+        <sheet>
+          <group>
+            <field name="name"/>
+            <field name="date_start"/>
+            <field name="date_end"/>
+            <field name="state"/>
+            <field name="active"/>
+          </group>
+        </sheet>
+      </form>
+    </field>
+  </record>
+</odoo>

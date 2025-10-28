@@ -7,6 +7,12 @@
   <menuitem id="menu_payroll_self_service" name="Phiếu lương của tôi" parent="menu_payroll_root" sequence="5"
             groups="payroll_3c.group_payroll_employee,payroll_3c.group_payroll_officer,payroll_3c.group_payroll_manager,payroll_3c.group_payroll_approver"
             action="action_payroll_my_payslips"/>
+  <!-- <menuitem id="menu_my_kpi" name="KPI của tôi" parent="menu_payroll_root" sequence="6"
+            groups="payroll_3c.group_payroll_employee,payroll_3c.group_payroll_officer,payroll_3c.group_payroll_manager,payroll_3c.group_payroll_approver"
+            action="action_kpi_my_records"/>
+  <menuitem id="menu_my_kpi_adjustments" name="KPI cộng/trừ của tôi" parent="menu_payroll_root" sequence="7"
+            groups="payroll_3c.group_payroll_employee,payroll_3c.group_payroll_officer,payroll_3c.group_payroll_manager"
+            action="action_my_kpi_adjustments"/> -->
 
   <!-- Hide the Operations hub and direct links to Payslips; lift Batches & Sheets to top level -->
   <!-- <menuitem id="menu_payroll_operations" name="Operations" parent="menu_payroll_root" sequence="10"
@@ -17,6 +23,8 @@
             action="action_payroll_runs" groups="payroll_3c.group_payroll_officer,payroll_3c.group_payroll_manager"/>
   <menuitem id="menu_payroll_sheets" name="Bảng lương" parent="menu_payroll_root" sequence="16"
             action="action_payroll_sheets" groups="payroll_3c.group_payroll_officer,payroll_3c.group_payroll_manager"/>
+  <menuitem id="menu_payroll_kpi_sheets" name="Payroll KPI" parent="menu_payroll_root" sequence="17"
+            action="action_payroll_kpi_sheets" groups="payroll_3c.group_payroll_officer,payroll_3c.group_payroll_manager"/>
 
   <menuitem id="menu_payroll_approvals" name="Approvals" parent="menu_payroll_root" sequence="20"
             groups="payroll_3c.group_payroll_approver,payroll_3c.group_payroll_manager"/>
@@ -32,4 +40,17 @@
   <menuitem id="menu_payroll_variables_refresh" name="Refresh Variable Catalog" parent="menu_payroll_configuration"
             action="ir_action_refresh_variable_catalog" groups="payroll_3c.group_payroll_manager"/>
   <menuitem id="menu_payroll_templates" name="Payroll Templates" parent="menu_payroll_configuration" action="action_payroll_templates"/>
+
+  <!-- KPI configuration menus -->
+  <menuitem id="menu_kpi_configuration" name="KPI" parent="menu_payroll_configuration" sequence="95"
+            groups="payroll_3c.group_payroll_officer,payroll_3c.group_payroll_manager"/>
+  <menuitem id="menu_kpi_groups" name="KPI Groups" parent="menu_kpi_configuration" action="action_kpi_groups"/>
+  <menuitem id="menu_kpi_labels" name="KPI Labels" parent="menu_kpi_configuration" action="action_kpi_labels"/>
+  <menuitem id="menu_kpi_quality_profiles" name="KPI Quality Profiles" parent="menu_kpi_configuration" action="action_kpi_quality_profiles"/>
+  <menuitem id="menu_kpi_periods" name="KPI Periods" parent="menu_kpi_configuration" action="action_kpi_periods"/>
+  <menuitem id="menu_kpi_compute" name="Compute KPI" parent="menu_kpi_configuration" action="action_kpi_compute_wizard"/>
+  <menuitem id="menu_kpi_adjust_rules" name="KPI Adjust Rules" parent="menu_kpi_configuration" action="action_kpi_adjust_rules"
+            groups="payroll_3c.group_payroll_officer,payroll_3c.group_payroll_manager"/>
+  <menuitem id="menu_kpi_adjust_records" name="KPI Adjustments" parent="menu_kpi_configuration" action="action_kpi_adjust_records"
+            groups="payroll_3c.group_payroll_officer,payroll_3c.group_payroll_manager"/>
 </odoo>

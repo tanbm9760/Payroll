@@ -40,6 +40,24 @@ class PayrollPayslip(models.Model):
     line_ids = fields.One2many("payroll.payslip.line", "payslip_id", string="Lines")
     employee_avatar_html = fields.Html(string="Avatar", compute="_compute_employee_avatar_html", sanitize=False)
 
+    # Payroll Sheet integration (for current employee in this run)
+    sheet_line_id = fields.Many2one('payroll.sheet.line', compute='_compute_sheet_line', readonly=True, store=False)
+    sheet_work_day = fields.Float(string="Công chuẩn", compute='_compute_sheet_numbers', readonly=True, store=False)
+    sheet_points = fields.Float(string="Công thực tế", compute='_compute_sheet_numbers', readonly=True, store=False)
+    sheet_values = fields.Text(string="Sheet JSON", compute='_compute_sheet_values', readonly=True, store=False)
+
+    # KPI integration for this payslip period
+    kpi_period_id = fields.Many2one('payroll.kpi_period', string='KPI Period', compute='_compute_kpi_period', store=False, readonly=True)
+    kpi_record_ids = fields.Many2many('payroll.kpi_record', string='KPI Records', compute='_compute_kpi_records', store=False, readonly=True)
+    kpi_total_score = fields.Float(string='KPI Total (%)', compute='_compute_kpi_total', store=False, readonly=True)
+    kpi_details_html = fields.Html(string='KPI Breakdown', compute='_compute_kpi_html', sanitize=False)
+    # KPI adjustments
+    kpi_adj_add = fields.Float(string='KPI Cộng (%)', compute='_compute_kpi_adjustments', store=False, readonly=True)
+    kpi_adj_sub = fields.Float(string='KPI Trừ (%)', compute='_compute_kpi_adjustments', store=False, readonly=True)
+    kpi_adj_net = fields.Float(string='KPI Cộng/Trừ (ròng %)', compute='_compute_kpi_adjustments', store=False, readonly=True)
+    kpi_final_total = fields.Float(string='KPI Cuối cùng (%)', compute='_compute_kpi_adjustments', store=False, readonly=True)
+    adjust_record_ids = fields.One2many('payroll.kpi_adjust_record', 'payslip_id', string='KPI Adjustments')
+
     def _compute_employee_user(self):
         """Deprecated: replaced by related field 'employee_user_id'. Keep for backward compatibility."""
         for rec in self:
@@ -66,6 +84,260 @@ class PayrollPayslip(models.Model):
                 d = fields.Date.context_today(self)
             rec.name = f"PS/{d.year}/{d.month:02d}/{rec.id:04d}"
         return rec
+
+    def _compute_sheet_line(self):
+        SheetLine = self.env['payroll.sheet.line']
+        for rec in self:
+            if rec.run_id and rec.employee_id:
+                line = SheetLine.search([
+                    ('sheet_id.run_id', '=', rec.run_id.id),
+                    ('employee_id', '=', rec.employee_id.id),
+                ], limit=1)
+                rec.sheet_line_id = line.id if line else False
+            else:
+                rec.sheet_line_id = False
+
+    def _compute_sheet_numbers(self):
+        for rec in self:
+            try:
+                work_day, points, _base = rec._get_sheet_values()
+            except Exception:
+                work_day, points = 0.0, 0.0
+            rec.sheet_work_day = work_day or 0.0
+            rec.sheet_points = points or 0.0
+
+    def _compute_sheet_values(self):
+        for rec in self:
+            rec.sheet_values = rec.sheet_line_id.values if rec.sheet_line_id else False
+
+    def _compute_kpi_period(self):
+        Period = self.env['payroll.kpi_period'].sudo()
+        for rec in self:
+            if rec.date_from and rec.date_to:
+                period = Period.search([
+                    ('date_start', '=', rec.date_from),
+                    ('date_end', '=', rec.date_to),
+                ], limit=1)
+                rec.kpi_period_id = period.id if period else False
+            else:
+                rec.kpi_period_id = False
+
+    def _compute_kpi_records(self):
+        Record = self.env['payroll.kpi_record']
+        for rec in self:
+            if rec.employee_id and rec.kpi_period_id:
+                records = Record.search([
+                    ('employee_id', '=', rec.employee_id.id),
+                    ('period_id', '=', rec.kpi_period_id.id),
+                ])
+                rec.kpi_record_ids = [(6, 0, records.ids)]
+            else:
+                rec.kpi_record_ids = [(6, 0, [])]
+
+    def _compute_kpi_adjustments(self):
+        Adjust = self.env['payroll.kpi_adjust_record']
+        for rec in self:
+            add_total = 0.0
+            sub_total = 0.0
+            if rec.employee_id and rec.kpi_period_id:
+                # Ensure auto adjustments are synced
+                try:
+                    self.env['payroll.kpi_adjust_record'].sudo().sync_auto_for_employee_period(rec.employee_id, rec.kpi_period_id, payslip=rec)
+                except Exception:
+                    pass
+                # Compute totals only from lines attached to this payslip
+                lines = rec.adjust_record_ids
+                for l in lines:
+                    pts = float(l.total_points or 0.0)
+                    if l.kind == 'add':
+                        add_total += pts
+                    else:
+                        sub_total += pts
+            net = add_total - sub_total
+            rec.kpi_adj_add = add_total
+            rec.kpi_adj_sub = sub_total
+            rec.kpi_adj_net = net
+            rec.kpi_final_total = (rec.kpi_total_score or 0.0) + net
+
+    def _compute_kpi_total(self):
+        for rec in self:
+            total = 0.0
+            try:
+                for r in rec.kpi_record_ids:
+                    total += float(getattr(r, 'score', 0.0) or 0.0)
+            except Exception:
+                total = 0.0
+            rec.kpi_total_score = total
+
+    def _compute_kpi_html(self):
+        for rec in self:
+            # Build a consolidated label-level table across all KPI records of this payslip
+            header = (
+                '<div class="o_form_view">'
+                '<table class="o_list_view table table-sm table-striped table-hover">'
+                '<thead><tr>'
+                '<th>Mô tả</th>'
+                '<th>Tên tag</th>'
+                '<th>Nhóm</th>'
+                '<th>Được giao</th>'
+                '<th>Đúng hạn</th>'
+                '<th>Hoàn thành muộn</th>'
+                '<th>Quá hạn</th>'
+                '<th>Trọng số</th>'
+                '<th>Điểm KPI quy đổi(%)</th>'
+                '</tr></thead><tbody>'
+            )
+            rows_html = []
+            # Collect labels from all kpi_record_ids
+            label_rows = []
+            label_ids = set()
+            for r in rec.kpi_record_ids:
+                details = r.details or {}
+                group_code = r.group_id.code or (details.get('code') if isinstance(details, dict) else '') or ''
+                for row in (details.get('labels') or []):
+                    lab_id = row.get('label_id')
+                    if lab_id:
+                        label_ids.add(lab_id)
+                    label_rows.append((group_code, row))
+
+            # Map label_id -> label record (for names and tag)
+            labels_map = {}
+            if label_ids:
+                Label = rec.env['payroll.kpi_label'].sudo()
+                for lab in Label.browse(list(label_ids)).exists():
+                    labels_map[lab.id] = lab
+
+            # Sort by group, then label name
+            def _sort_key(item):
+                gcode, row = item
+                lab = labels_map.get(row.get('label_id'))
+                lname = lab.name if lab else ''
+                return (gcode or '', lname)
+
+            label_rows.sort(key=_sort_key)
+
+            # Pre-compute per-group stats for proper distribution within group
+            group_stats = {}
+            for gcode, row in label_rows:
+                lab = labels_map.get(row.get('label_id'))
+                if gcode not in group_stats:
+                    group_stats[gcode] = {
+                        'label_count': 0,
+                        'total_weight': 0.0,
+                        'total_assigned': 0.0,
+                        'total_E_G': 0.0,
+                        'sum_weight_times_assigned': 0.0,
+                        'sum_EG_times_weight': 0.0,
+                        'group_weight': 0.0,
+                    }
+                st = group_stats[gcode]
+                st['label_count'] += 1
+                # label configured weight
+                try:
+                    w = float(row.get('weight') or (lab.weight if lab else 0.0) or 0.0)
+                except Exception:
+                    w = 0.0
+                st['total_weight'] += w
+                # sums for ratio
+                try:
+                    assigned_v = float(row.get('assigned') or 0.0)
+                    st['total_assigned'] += assigned_v
+                except Exception:
+                    assigned_v = 0.0
+                try:
+                    e_g_v = float(row.get('E_G') or 0.0)
+                    st['total_E_G'] += e_g_v
+                except Exception:
+                    e_g_v = 0.0
+                # accumulate E_G * weight for weighted ratio (match engine)
+                try:
+                    st['sum_EG_times_weight'] += float(w) * float(e_g_v)
+                except Exception:
+                    pass
+                # denominator for contribution share inside group: weight * assigned
+                try:
+                    st['sum_weight_times_assigned'] += float(w) * float(assigned_v)
+                except Exception:
+                    pass
+                # group weight (%) from model
+                try:
+                    st['group_weight'] = float(lab.group_id.weight or 0.0) if lab and lab.group_id else (st['group_weight'] or 0.0)
+                except Exception:
+                    pass
+
+            for group_code, row in label_rows:
+                lab = labels_map.get(row.get('label_id'))
+                label_name = lab.name if lab else str(row.get('label_id') or '')
+                tag_name = lab.tag_id.name if (lab and lab.tag_id) else ''
+                assigned = int(row.get('assigned') or 0)
+                ontime = int(row.get('ontime') or 0)
+                late = int(row.get('late') or 0)
+                overdue = int(row.get('overdue') or 0)
+                weight = float(row.get('weight') or (lab.weight if lab else 0.0) or 0.0)
+                e_g = float(row.get('E_G') or 0.0)
+                # Distribution inside group: share by (label weight * assigned)
+                st = group_stats.get(group_code, {})
+                total_w = float(st.get('total_weight') or 0.0)
+                cnt = int(st.get('label_count') or 0)
+                denom = float(st.get('sum_weight_times_assigned') or 0.0)
+                if denom > 0.0:
+                    share = (weight * float(assigned)) / denom
+                else:
+                    # Fallback when no assignments at all: use weight proportion or equal share
+                    share = (weight / total_w) if total_w > 0.0 else (1.0 / cnt if cnt else 0.0)
+                # Group achieved ratio (weighted to match engine): num/den
+                num_w = float(st.get('sum_EG_times_weight') or 0.0)
+                den_w = float(st.get('sum_weight_times_assigned') or 0.0)
+                ratio_g = (num_w / den_w) if den_w else 0.0
+                group_weight = float(st.get('group_weight') or 0.0)
+                # Final contribution of this label within group's weighted KPI
+                kpi_pct_weighted = share * ratio_g * group_weight
+                rows_html.append(
+                    '<tr>'
+                    f'<td>{label_name}</td>'
+                    f'<td>{tag_name}</td>'
+                    f'<td>{group_code}</td>'
+                    f'<td style="text-align:center">{assigned}</td>'
+                    f'<td style="text-align:center">{ontime}</td>'
+                    f'<td style="text-align:center">{late}</td>'
+                    f'<td style="text-align:center">{overdue}</td>'
+                    f'<td style="text-align:center">{weight:.2f}</td>'
+                    f'<td style="text-align:center">{kpi_pct_weighted:.2f}</td>'
+                    '</tr>'
+                )
+
+            footer = '</tbody></table></div>'
+            rec.kpi_details_html = header + ''.join(rows_html) + footer if rows_html else False
+
+    # ---------- Helper to expose KPI figures as variables for formulas ----------
+    def _build_kpi_variables(self):
+        """Return a dict of dynamic KPI variables for this payslip instance.
+        Keys:
+          - 'KPI_TOTAL' (and 'kpi_total')
+          - 'KPI_<GROUP_CODE>' for each KPI group code present (also lowercase alias)
+        Values are floats (percent scores, same as kpi_record.score).
+        """
+        self.ensure_one()
+        res = {}
+        try:
+            total = float(self.kpi_total_score or 0.0)
+            res['KPI_TOTAL'] = total
+            res['kpi_total'] = total
+        except Exception:
+            pass
+        try:
+            for r in (self.kpi_record_ids or self.env['payroll.kpi_record']):
+                code = ((r.group_id and r.group_id.code) or '').strip()
+                if not code:
+                    continue
+                key_up = f"KPI_{code.upper()}"
+                key_lo = f"kpi_{code.lower()}"
+                val = float(getattr(r, 'score', 0.0) or 0.0)
+                res[key_up] = val
+                res[key_lo] = val
+        except Exception:
+            pass
+        return res
 
     def _get_sheet_values(self):
         """Return (work_day, points, base_wage_resolved) for this slip's employee.
@@ -149,6 +421,14 @@ class PayrollPayslip(models.Model):
                     slip.employee_id, slip.date_from, slip.date_to)
             except Exception:
                 var_map = {}
+            # Bổ sung biến KPI động cho kỳ lương hiện tại: KPI_TOTAL và KPI_<GROUP_CODE>
+            try:
+                kpi_vars = slip._build_kpi_variables()
+                if kpi_vars:
+                    var_map.update(kpi_vars)
+            except Exception:
+                # Không chặn nếu không lấy được KPI
+                pass
             rules = active_rules.sorted(key=lambda r: (r.sequence, r.id))
             local_base = {
                 'slip': slip,
@@ -206,6 +486,28 @@ class PayrollPayslip(models.Model):
         """Deprecated: Computation now fully driven by salary rules. Keep for backward-compatibility (no-op)."""
         return True
 
+    def action_save_kpi_adjustments(self):
+        """Explicit save/sync action for KPI adjustments on this payslip.
+        - Re-sync auto adjustments for this payslip
+        - Return a UI notification
+        """
+        for rec in self:
+            try:
+                self.env['payroll.kpi_adjust_record'].sudo().sync_auto_for_employee_period(
+                    rec.employee_id, rec.kpi_period_id, payslip=rec)
+            except Exception:
+                # Do not block UI on sync errors; values will remain as-is
+                pass
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'message': _('Đã lưu và cập nhật cộng/trừ KPI.'),
+                'type': 'success',
+                'sticky': False,
+            }
+        }
+
     @staticmethod
     def _vn_pit_progressive(taxable):
         """Vietnam monthly PIT progressive computation without quick deduction.
@@ -262,6 +564,13 @@ class PayrollPayslip(models.Model):
     def action_cancel(self):
         self.write({'state': 'cancel'})
         return True
+
+    def unlink(self):
+        for rec in self:
+            # Business rule: do not allow deleting completed payslips
+            if rec.state == 'done':
+                raise UserError(_("Không thể xóa phiếu lương ở trạng thái Done."))
+        return super().unlink()
 
 
 class PayrollPayslipLine(models.Model):

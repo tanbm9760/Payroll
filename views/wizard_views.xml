@@ -28,4 +28,36 @@
     <field name="target">new</field>
     <field name="groups_id" eval="[(4, ref('payroll_3c.group_payroll_officer')), (4, ref('payroll_3c.group_payroll_manager'))]"/>
   </record>
+
+  <!-- KPI Compute Wizard -->
+  <record id="view_kpi_compute_wizard_form" model="ir.ui.view">
+    <field name="name">payroll.kpi.compute.wizard.form</field>
+    <field name="model">payroll.kpi.compute.wizard</field>
+    <field name="arch" type="xml">
+      <form string="Compute KPI by Period">
+        <sheet>
+          <group>
+            <field name="period_id"/>
+            <field name="quality_profile_id"/>
+            <field name="overdue_threshold_days"/>
+          </group>
+          <group>
+            <field name="employee_ids" widget="many2many_tags" placeholder="Leave empty to compute for all employees"/>
+          </group>
+        </sheet>
+        <footer>
+          <button string="Compute" type="object" name="action_compute" class="btn-primary"/>
+          <button string="Cancel" class="btn-secondary" special="cancel"/>
+        </footer>
+      </form>
+    </field>
+  </record>
+
+  <record id="action_kpi_compute_wizard" model="ir.actions.act_window">
+    <field name="name">Compute KPI</field>
+    <field name="res_model">payroll.kpi.compute.wizard</field>
+    <field name="view_mode">form</field>
+    <field name="target">new</field>
+    <field name="groups_id" eval="[(4, ref('payroll_3c.group_payroll_officer')), (4, ref('payroll_3c.group_payroll_manager'))]"/>
+  </record>
 </odoo>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <record id="kpi_adjust_rule_late" model="payroll.kpi_adjust_rule">
+    <field name="name">Đi trễ</field>
+    <field name="code">LATE</field>
+    <field name="sequence">10</field>
+    <field name="kind">sub</field>
+    <field name="points_per_occurrence">1.0</field>
+    <field name="source_type">auto</field>
+    <field name="variable_key">sum_late</field>
+    <field name="active">1</field>
+  </record>
+  <record id="kpi_adjust_rule_bonus" model="payroll.kpi_adjust_rule">
+    <field name="name">Thành tích đặc biệt</field>
+    <field name="code">BONUS</field>
+    <field name="sequence">20</field>
+    <field name="kind">add</field>
+    <field name="points_per_occurrence">2.0</field>
+    <field name="source_type">manual</field>
+    <field name="active">1</field>
+  </record>
+</odoo>

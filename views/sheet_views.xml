@@ -85,7 +85,7 @@
               <field name="employee_id" readonly="1"/>
               <field name="emp_code" readonly="1"/>
               <field name="department_name" readonly="1"/>
-              <field name="employee_calendar2_id"/ readonly="1"/>
+              <field name="employee_calendar2_id" readonly="1"/>
               <field name="work_day" string="Công chuẩn" sum="Tổng công chuẩn"/>
               <field name="points" string="Công thực tế" sum="Tổng công thực tế"/>
               <field name="unpaid_lf_point"/>
