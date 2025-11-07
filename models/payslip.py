@@ -751,6 +751,25 @@ class PayrollPayslipRun(models.Model):
             }
         )
 
+    def action_open_payslips_list(self):
+        self.ensure_one()
+        action = self.env.ref('payroll_3c.action_payroll_payslips').sudo().read()[0]
+        # Focus the list on this batch and keep search view filters (department, etc.)
+        raw_ctx = action.get('context') or {}
+        if isinstance(raw_ctx, str):
+            try:
+                raw_ctx = safe_eval(raw_ctx)
+            except Exception:
+                raw_ctx = {}
+        ctx = dict(raw_ctx)
+        ctx.update({
+            'default_run_id': self.id,
+            'search_default_run_id': self.id,
+        })
+        action['context'] = ctx
+        action['domain'] = [('run_id', '=', self.id)]
+        return action
+
     def action_sync_sheet_and_compute(self):
         """Ensure sheet exists, sync timesheet points, then compute all payslips."""
         for run in self:

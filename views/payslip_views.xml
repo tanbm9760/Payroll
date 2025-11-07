@@ -5,7 +5,7 @@
     <field name="name">payroll.payslip.tree</field>
     <field name="model">payroll.payslip</field>
     <field name="arch" type="xml">
-  <tree create="0" edit="0" delete="1">
+      <tree create="0" edit="0" delete="1">
         <field name="name"/>
         <field name="employee_id"/>
         <field name="employee_department_id"/>
@@ -13,6 +13,21 @@
         <field name="date_from"/>
         <field name="date_to"/>
         <field name="state"/>
+  <button name="action_reset_to_draft" type="object" string="Set Draft" class="btn-secondary"
+    groups="payroll_3c.group_payroll_officer,payroll_3c.group_payroll_manager"
+    invisible="state == 'draft'"/>
+  <button name="action_set_to_approve" type="object" string="Submit" class="btn-primary"
+    groups="payroll_3c.group_payroll_officer,payroll_3c.group_payroll_manager"
+    invisible="state != 'draft'"/>
+  <button name="action_approve" type="object" string="Approve" class="btn-success"
+    groups="payroll_3c.group_payroll_approver,payroll_3c.group_payroll_manager"
+    invisible="state != 'to_approve'"/>
+  <button name="action_done" type="object" string="Done" class="btn-primary"
+    groups="payroll_3c.group_payroll_officer,payroll_3c.group_payroll_manager"
+    invisible="state != 'approved'"/>
+  <button name="action_cancel" type="object" string="Cancel" class="btn-secondary"
+    groups="payroll_3c.group_payroll_officer,payroll_3c.group_payroll_manager"
+    invisible="state == 'cancel'"/>
       </tree>
     </field>
   </record>
@@ -154,6 +169,39 @@
       </form>
     </field>
   </record>
+  <!-- Search view with Department filters/grouping and search panel -->
+  <record id="view_payroll_payslip_search" model="ir.ui.view">
+    <field name="name">payroll.payslip.search</field>
+    <field name="model">payroll.payslip</field>
+    <field name="arch" type="xml">
+      <search string="Search Payslips">
+        <field name="name"/>
+        <field name="employee_id"/>
+        <field name="employee_department_id"/>
+        <field name="run_id"/>
+        <field name="date_from"/>
+        <field name="date_to"/>
+
+        <filter string="Draft" name="state_draft" domain="[('state','=','draft')]"/>
+        <filter string="To Approve" name="state_toapprove" domain="[('state','=','to_approve')]"/>
+        <filter string="Approved" name="state_approved" domain="[('state','=','approved')]"/>
+        <filter string="Done" name="state_done" domain="[('state','=','done')]"/>
+        <filter string="Cancelled" name="state_cancel" domain="[('state','=','cancel')]"/>
+
+        <separator/>
+        <group expand="1" string="Group By">
+          <filter name="grp_department" string="Phòng ban" context="{'group_by':'employee_department_id'}"/>
+          <filter name="grp_run" string="Batch" context="{'group_by':'run_id'}"/>
+          <filter name="grp_state" string="State" context="{'group_by':'state'}"/>
+        </group>
+
+        <!-- Search Panel on the left for quick filtering by Department -->
+        <searchpanel>
+          <field name="employee_department_id" string="Phòng ban" select="multi"/>
+        </searchpanel>
+      </search>
+    </field>
+  </record>
   <record id="action_payroll_payslips" model="ir.actions.act_window">
     <field name="name">Payslips</field>
     <field name="res_model">payroll.payslip</field>
@@ -184,6 +232,8 @@
           <button name="action_open_create_sheet_wizard" type="object" string="Tạo bảng lương"
                   class="btn-secondary" groups="payroll_3c.group_payroll_officer,payroll_3c.group_payroll_manager"/>
     <button name="%(payroll_3c.server_action_compute_payslips_run)d" type="action" string="Tính toán"
+      class="btn-secondary" groups="payroll_3c.group_payroll_officer,payroll_3c.group_payroll_manager"/>
+    <button name="action_open_payslips_list" type="object" string="Danh sách phiếu lương"
       class="btn-secondary" groups="payroll_3c.group_payroll_officer,payroll_3c.group_payroll_manager"/>
     <button name="action_open_confirm_delete_batch" type="object" string="Xóa" class="btn-danger"/>
   </header>
@@ -222,38 +272,5 @@
     <field name="name">Payroll Batches</field>
     <field name="res_model">payroll.payslip.run</field>
     <field name="view_mode">tree,form</field>
-  </record>
-
-  <!-- Search view with Department filters/grouping and search panel -->
-  <record id="view_payroll_payslip_search" model="ir.ui.view">
-    <field name="name">payroll.payslip.search</field>
-    <field name="model">payroll.payslip</field>
-    <field name="arch" type="xml">
-      <search string="Search Payslips">
-        <field name="name"/>
-        <field name="employee_id"/>
-        <field name="run_id"/>
-        <field name="date_from"/>
-        <field name="date_to"/>
-
-        <filter string="Draft" name="state_draft" domain="[('state','=','draft')]"/>
-        <filter string="To Approve" name="state_toapprove" domain="[('state','=','to_approve')]"/>
-        <filter string="Approved" name="state_approved" domain="[('state','=','approved')]"/>
-        <filter string="Done" name="state_done" domain="[('state','=','done')]"/>
-        <filter string="Cancelled" name="state_cancel" domain="[('state','=','cancel')]"/>
-
-        <separator/>
-        <group expand="1" string="Group By">
-          <filter name="grp_department" string="Phòng ban" context="{'group_by':'employee_department_id'}"/>
-          <filter name="grp_run" string="Batch" context="{'group_by':'run_id'}"/>
-          <filter name="grp_state" string="State" context="{'group_by':'state'}"/>
-        </group>
-
-        <!-- Search Panel on the left for quick filtering by Department -->
-        <searchpanel>
-          <field name="employee_department_id" string="Phòng ban" select="multi"/>
-        </searchpanel>
-      </search>
-    </field>
   </record>
 </odoo>
