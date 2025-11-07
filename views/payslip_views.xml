@@ -158,6 +158,7 @@
     <field name="name">Payslips</field>
     <field name="res_model">payroll.payslip</field>
     <field name="view_mode">tree,form</field>
+    <field name="search_view_id" ref="payroll_3c.view_payroll_payslip_search"/>
   </record>
 
   <!-- Batches -->
@@ -221,5 +222,38 @@
     <field name="name">Payroll Batches</field>
     <field name="res_model">payroll.payslip.run</field>
     <field name="view_mode">tree,form</field>
+  </record>
+
+  <!-- Search view with Department filters/grouping and search panel -->
+  <record id="view_payroll_payslip_search" model="ir.ui.view">
+    <field name="name">payroll.payslip.search</field>
+    <field name="model">payroll.payslip</field>
+    <field name="arch" type="xml">
+      <search string="Search Payslips">
+        <field name="name"/>
+        <field name="employee_id"/>
+        <field name="run_id"/>
+        <field name="date_from"/>
+        <field name="date_to"/>
+
+        <filter string="Draft" name="state_draft" domain="[('state','=','draft')]"/>
+        <filter string="To Approve" name="state_toapprove" domain="[('state','=','to_approve')]"/>
+        <filter string="Approved" name="state_approved" domain="[('state','=','approved')]"/>
+        <filter string="Done" name="state_done" domain="[('state','=','done')]"/>
+        <filter string="Cancelled" name="state_cancel" domain="[('state','=','cancel')]"/>
+
+        <separator/>
+        <group expand="1" string="Group By">
+          <filter name="grp_department" string="Phòng ban" context="{'group_by':'employee_department_id'}"/>
+          <filter name="grp_run" string="Batch" context="{'group_by':'run_id'}"/>
+          <filter name="grp_state" string="State" context="{'group_by':'state'}"/>
+        </group>
+
+        <!-- Search Panel on the left for quick filtering by Department -->
+        <searchpanel>
+          <field name="employee_department_id" string="Phòng ban" select="multi"/>
+        </searchpanel>
+      </search>
+    </field>
   </record>
 </odoo>
